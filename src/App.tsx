@@ -72,7 +72,7 @@ function App() {
           <motion.div className="about-copy" {...reveal}>
             <p className="kicker">Hello. I’m Franky Fu.</p>
             <h2>Developer by training.<br/><span>Designer in spirit.</span></h2>
-            <p>I’m a Software Development Diploma student at NAIT, graduating in April 2026. I build full-stack web applications across React, Next.js, C#/.NET and Blazor, and integrate AI tools into daily development while reviewing every result with care.</p>
+            <p>I’m a Software Development Diploma student at NAIT, graduating in 2026. I build full-stack web applications across React, Next.js, C#/.NET and Blazor, and integrate AI tools into daily development while reviewing every result with care.</p>
             <div className="facts"><div><b>2026</b><span>NAIT Graduate</span></div><div><b>2</b><span>Featured builds</span></div><div><b>3</b><span>Languages</span></div></div>
           </motion.div>
         </div>
