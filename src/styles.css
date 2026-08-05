@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Manrope:wght@400;500;600&display=swap');
 
-/* Resume-backed profile image overrides */
+/* Profile image overrides */
 .bikes-screens{position:relative;width:86%;height:78%;perspective:1800px}
 .bikes-screens img{position:absolute;width:78%;border-radius:10px;border:1px solid rgba(255,255,255,.22);box-shadow:0 40px 90px rgba(0,0,0,.5);transition:transform .8s cubic-bezier(.16,1,.3,1);object-fit:cover}
 .screen-sales{left:0;top:0;transform:rotateY(5deg) rotateZ(-1deg)}

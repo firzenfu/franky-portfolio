@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import Lenis from 'lenis'
-import { ArrowDown, ArrowUpRight, Code2, CircleUserRound, Mail, Sparkles } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Code2, Mail, Sparkles } from 'lucide-react'
 
 const projects = [
   { index: '01', name: 'Bikes R Us', type: 'Sales & returns module · NAIT team project', stack: ['Blazor Server', 'MudBlazor', 'EF Core', 'SQL Server'], tone: 'blue', href: 'https://github.com/firzenfu' },
@@ -114,7 +114,7 @@ function App() {
         <div className="section-label"><span>04</span> Contact</div>
         <motion.div {...reveal}><p>Have a project, role, or interesting idea?</p><h2>LET’S BUILD<br/><span>SOMETHING GREAT.</span></h2></motion.div>
         <a className="email" href="mailto:firzenfu@gmail.com">firzenfu@gmail.com <ArrowUpRight/></a>
-        <footer><span>© 2026 Franky Fu</span><div><a href="https://github.com/firzenfu"><Code2/> GitHub</a><a href="/Franky_Fu_Resume.docx" download><CircleUserRound/> Resume</a><a href="mailto:firzenfu@gmail.com"><Mail/> Email</a></div><a href="#top">Back to top ↑</a></footer>
+        <footer><span>© 2026 Franky Fu</span><div><a href="https://github.com/firzenfu"><Code2/> GitHub</a><a href="mailto:firzenfu@gmail.com"><Mail/> Email</a></div><a href="#top">Back to top ↑</a></footer>
       </section>
     </main>
   </>
