@@ -77,8 +77,8 @@ The visual sequence is:
 
 1. Video hero.
 2. Short personal manifesto.
-3. Project chapters.
-4. About and portrait.
+3. About and portrait.
+4. Project chapters.
 5. Capability index.
 6. Experience.
 7. Contact closing scene.
