@@ -23,6 +23,12 @@ npm test
 npm run build
 ```
 
+## Background audio
+
+The optional looping soundtrack lives at `public/audio/title-arcana-ver2.mp3` and is controlled by `src/components/BackgroundMusic.tsx`. It starts only after user interaction, uses 22% volume, remembers a muted preference, and pauses while the page is hidden.
+
+Replace the MP3 at the same public path to change the soundtrack, then rerun `npm test` and `npm run build`.
+
 ## Video assets
 
 Temporary development videos come from [`ryota-kk/personal-homepage`](https://github.com/ryota-kk/personal-homepage) at pinned commit `efaa277681640156d3178cc45a0e4d8bdc1efd77`. Their URLs live only in `src/data/media.ts`. They are placeholders for local preview, and a license for republication has not been established.

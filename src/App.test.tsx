@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { buildMailtoUrl, navigateToMailto } from './lib/mailto'
 
@@ -22,12 +22,26 @@ class ObserverStub {
 vi.stubGlobal('IntersectionObserver', ObserverStub)
 vi.stubGlobal('ResizeObserver', ObserverStub)
 
+beforeEach(() => {
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined)
+})
+
 afterEach(() => {
   cleanup()
   vi.clearAllMocks()
+  vi.restoreAllMocks()
+  localStorage.removeItem('franky-portfolio:background-music-muted')
 })
 
 describe('portfolio shell', () => {
+  it('mounts one accessible background music control', () => {
+    const { container } = render(<App />)
+
+    expect(screen.getByRole('button', { name: 'Play background music' })).toBeInTheDocument()
+    expect(container.querySelectorAll('audio[src="/audio/title-arcana-ver2.mp3"]')).toHaveLength(1)
+  })
+
   it('preserves navigation labels and section anchors', () => {
     const { container } = render(<App />)
 

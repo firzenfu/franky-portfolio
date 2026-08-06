@@ -1,4 +1,5 @@
 import { AboutStatement } from './components/AboutStatement'
+import { BackgroundMusic } from './components/BackgroundMusic'
 import { CapabilityIndex } from './components/CapabilityIndex'
 import { ContactScene } from './components/ContactScene'
 import { ExperienceTimeline } from './components/ExperienceTimeline'
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <SiteNav />
+      <BackgroundMusic />
       <main>
         <HeroScene />
         <AboutStatement />
