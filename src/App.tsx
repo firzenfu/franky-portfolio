@@ -6,7 +6,7 @@ import { ArrowDown, ArrowUpRight, Code2, Mail, MapPin, Send, Sparkles } from 'lu
 const projects = [
   { number: '01', title: 'Bikes R Us', subtitle: 'Sales & Returns System', year: '2025', image: '/images/bikes-r-us-sales.png', href: 'https://github.com/firzenfu', stack: ['Blazor Server', 'MudBlazor', 'EF Core', 'SQL Server'] },
   { number: '02', title: 'Job Board', subtitle: 'Recruitment Web App', year: '2025', image: '/images/job-board.png', href: 'https://github.com/firzenfu', stack: ['Next.js', 'Prisma', 'REST API', 'Jest'] },
-  { number: '03', title: 'Next Experiment', subtitle: 'AI-native Product', year: 'Soon', image: '/images/bikes-r-us-returns.png', href: 'https://github.com/firzenfu', stack: ['AI Workflow', 'TypeScript', 'Product Design'] },
+  { number: '03', title: 'Next Experiment', subtitle: 'AI-native Product', year: 'Soon', image: '/images/next-experiment-v2.png', href: 'https://github.com/firzenfu', stack: ['AI Workflow', 'TypeScript', 'Product Design'] },
 ]
 
 const experience = [
