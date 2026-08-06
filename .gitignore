@@ -2,6 +2,7 @@ node_modules/
 dist/
 .tmp_resume/
 open-image-prompts/
+.superpowers/
 *.tsbuildinfo
 .env
 .env.*
