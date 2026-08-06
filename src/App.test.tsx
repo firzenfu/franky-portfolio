@@ -40,4 +40,13 @@ describe('portfolio shell', () => {
 
     expect(lines.map((line) => line.textContent)).toEqual(['Software with a', 'point of view.'])
   })
+
+  it('renders every project as a linked narrative chapter', () => {
+    render(<App />)
+    for (const title of ['Bikes R Us', 'Job Board', 'Next Experiment']) {
+      expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
+    }
+    expect(screen.getAllByRole('link', { name: 'Open project' })).toHaveLength(3)
+    expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
+  })
 })

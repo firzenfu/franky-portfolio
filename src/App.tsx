@@ -1,11 +1,10 @@
 import { HeroScene } from './components/HeroScene'
+import { ProjectChapter } from './components/ProjectChapter'
 import { SiteNav } from './components/SiteNav'
+import { sceneMedia, type SceneKey } from './data/media'
+import { projects } from './data/portfolio'
 
-const projects = [
-  { title: 'Bikes R Us', detail: 'Sales and returns system built with Blazor Server, MudBlazor, EF Core, and SQL Server.' },
-  { title: 'Job Board', detail: 'Recruitment web app built with Next.js, Prisma, REST APIs, and Jest.' },
-  { title: 'Next Experiment', detail: 'An AI-native product experiment using TypeScript and product design workflows.' },
-]
+const projectMedia: SceneKey[] = ['bikes', 'jobs', 'experiment']
 
 function App() {
   return (
@@ -28,17 +27,19 @@ function App() {
           </div>
         </section>
 
-        <section className="interim-section work-section" id="work">
-          <div className="section-shell">
+        <section className="work-section" id="work">
+          <div className="section-shell work-heading">
             <h2>Work that solves, not just decorates.</h2>
-            <div className="project-list">
-              {projects.map((project) => (
-                <article key={project.title}>
-                  <h3>{project.title}</h3>
-                  <p>{project.detail}</p>
-                </article>
-              ))}
-            </div>
+          </div>
+          <div className="project-list">
+            {projects.map((project, index) => (
+              <ProjectChapter
+                key={project.slug}
+                project={project}
+                media={sceneMedia[projectMedia[index]]}
+                index={index}
+              />
+            ))}
           </div>
         </section>
 
