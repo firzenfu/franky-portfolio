@@ -50,4 +50,16 @@ describe('index fallback', () => {
     expect(css).toContain('@media (prefers-reduced-motion: reduce)')
     expect(css).toMatch(/\.fallback-app a:hover,[\s\S]*?transform:\s*none/)
   })
+
+  it('keeps acid fallback button text dark on hover and active', () => {
+    const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
+    const document = new JSDOM(html).window.document
+    const css = document.querySelector('head style')?.textContent ?? ''
+    const hoverRule = css.match(/\.fallback-button:hover\s*\{([^}]*)\}/)?.[1] ?? ''
+    const activeRule = css.match(/\.fallback-button:active\s*\{([^}]*)\}/)?.[1] ?? ''
+
+    expect(hoverRule).toMatch(/^\s*color:\s*#0d0f10;/m)
+    expect(hoverRule).not.toMatch(/^\s*color:\s*#f2f1eb;/m)
+    expect(activeRule).toMatch(/^\s*color:\s*#0d0f10;/m)
+  })
 })
