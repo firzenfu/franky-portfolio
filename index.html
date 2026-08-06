@@ -3,12 +3,281 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#070707" />
-    <meta name="description" content="Franky Fu — software engineer building modern web experiences with AI-assisted development." />
-    <title>Franky Fu</title>
+    <link rel="preload" as="image" href="/images/franky-avatar.jpg" />
+    <meta name="theme-color" content="#0d0f10" />
+    <meta name="description" content="Franky Fu is a software developer building full-stack products with clear systems, considered interfaces, and practical AI workflows." />
+    <meta property="og:title" content="Franky Fu | Software Developer" />
+    <meta property="og:description" content="Full-stack products shaped by systems thinking, visual craft, and practical AI workflows." />
+    <meta property="og:image" content="/images/next-experiment-v2.png" />
+    <title>Franky Fu | Software Developer</title>
+    <style>
+      body {
+        margin: 0;
+        background: #0d0f10;
+        color: #f2f1eb;
+        font-family: system-ui, sans-serif;
+      }
+
+      .fallback-app {
+        min-height: 100dvh;
+        background:
+          radial-gradient(circle at 85% 10%, rgb(215 255 67 / 10%), transparent 28rem),
+          #0d0f10;
+      }
+
+      .fallback-shell {
+        width: min(1120px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      .fallback-header {
+        border-bottom: 1px solid rgb(242 241 235 / 18%);
+      }
+
+      .fallback-nav-shell,
+      .fallback-nav ul,
+      .fallback-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .fallback-nav-shell {
+        justify-content: space-between;
+        gap: 16px 32px;
+        padding-block: 20px;
+      }
+
+      .fallback-wordmark {
+        color: #f2f1eb;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        text-decoration: none;
+      }
+
+      .fallback-nav ul {
+        gap: 12px 24px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .fallback-nav a,
+      .fallback-text-link {
+        color: #d7ff43;
+        font-weight: 700;
+        text-underline-offset: 0.25em;
+      }
+
+      .fallback-app a {
+        display: inline-block;
+        transition:
+          transform 180ms ease,
+          opacity 180ms ease,
+          color 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .fallback-app a:hover {
+        opacity: 0.82;
+        transform: translateY(-2px);
+      }
+
+      .fallback-app a:active {
+        opacity: 0.72;
+        transform: translateY(1px);
+      }
+
+      .fallback-wordmark:hover,
+      .fallback-text-link:hover {
+        color: #f2f1eb;
+      }
+
+      .fallback-app section {
+        padding-block: clamp(56px, 9vw, 112px);
+        border-bottom: 1px solid rgb(242 241 235 / 14%);
+      }
+
+      .fallback-app h1,
+      .fallback-app h2,
+      .fallback-app h3,
+      .fallback-app p {
+        max-width: 760px;
+        margin-top: 0;
+      }
+
+      .fallback-app h1 {
+        margin-bottom: 24px;
+        font-size: clamp(4rem, 13vw, 9rem);
+        letter-spacing: -0.07em;
+        line-height: 0.86;
+      }
+
+      .fallback-app h2 {
+        margin-bottom: 28px;
+        font-size: clamp(2.25rem, 6vw, 4.5rem);
+        letter-spacing: -0.05em;
+        line-height: 0.98;
+      }
+
+      .fallback-app h3 {
+        margin-bottom: 18px;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+      }
+
+      .fallback-app p {
+        color: #b8bab4;
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+
+      .fallback-app .fallback-kicker {
+        color: #d7ff43;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .fallback-button {
+        border: 2px solid #d7ff43;
+        border-radius: 999px;
+        padding: 12px 18px;
+        color: #0d0f10;
+        background: #d7ff43;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .fallback-button:hover {
+        border-color: #f2f1eb;
+        color: #0d0f10;
+      }
+
+      .fallback-button:active {
+        border-color: #0d0f10;
+        color: #0d0f10;
+      }
+
+      .fallback-project {
+        padding-block: 32px;
+        border-top: 1px solid rgb(242 241 235 / 14%);
+      }
+
+      .fallback-project strong {
+        color: #f2f1eb;
+      }
+
+      .fallback-actions {
+        gap: 16px;
+      }
+
+      .fallback-app a:focus-visible {
+        outline: 3px solid #d7ff43;
+        outline-offset: 5px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .fallback-app a {
+          transition:
+            opacity 120ms linear,
+            color 120ms linear,
+            border-color 120ms linear;
+        }
+
+        .fallback-app a:hover,
+        .fallback-app a:active {
+          transform: none;
+        }
+      }
+
+      .fallback-footer,
+      .fallback-script-note {
+        margin: 0;
+        padding: 24px 20px;
+        color: #8d9089;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="fallback-app">
+        <header id="top" class="fallback-header">
+          <div class="fallback-shell fallback-nav-shell">
+            <a class="fallback-wordmark" href="#top">Franky Fu</a>
+            <nav class="fallback-nav" aria-label="Portfolio navigation">
+              <ul>
+                <li><a href="#top">Top</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+
+        <main>
+          <section class="fallback-shell" aria-labelledby="fallback-intro-title">
+            <p class="fallback-kicker">Software developer</p>
+            <h1 id="fallback-intro-title">Franky Fu</h1>
+            <p>I build full-stack products with clear systems, considered interfaces, and practical AI workflows.</p>
+            <a class="fallback-button" href="#work">View work</a>
+          </section>
+
+          <section id="about" class="fallback-shell" aria-labelledby="fallback-about-title">
+            <h2 id="fallback-about-title">Developer by training. Designer in spirit.</h2>
+            <p>I build full-stack products with clear systems, considered interfaces, and practical AI workflows.</p>
+            <p>Based in Edmonton and studying Software Development at NAIT, I bring care for product clarity to frontend, backend, database, and testing work.</p>
+          </section>
+
+          <section id="work" class="fallback-shell" aria-labelledby="fallback-work-title">
+            <h2 id="fallback-work-title">Products built around real workflows.</h2>
+
+            <article class="fallback-project">
+              <h3 data-project="Bikes R Us">Bikes R Us</h3>
+              <p><strong>Problem:</strong> Sales and returns workflows needed one dependable place for staff to review activity and keep records aligned.</p>
+              <p><strong>Solution:</strong> Built a Blazor Server system with MudBlazor, Entity Framework Core, SQL Server, and focused operational views.</p>
+              <a class="fallback-text-link" href="https://github.com/firzenfu">View GitHub profile</a>
+            </article>
+
+            <article class="fallback-project">
+              <h3 data-project="Job Board">Job Board</h3>
+              <p><strong>Problem:</strong> Candidates and recruiters needed a clearer path through listings, applications, and structured job data.</p>
+              <p><strong>Solution:</strong> Created a Next.js recruitment application with Prisma, REST endpoints, and Jest coverage for core flows.</p>
+              <a class="fallback-text-link" href="https://github.com/firzenfu">View GitHub profile</a>
+            </article>
+
+            <article class="fallback-project">
+              <h3 data-project="Next Experiment">Next Experiment</h3>
+              <p><strong>Problem:</strong> Exploring how AI-native workflows can move from isolated prompts into a coherent product experience.</p>
+              <p><strong>Solution:</strong> Developing a TypeScript experiment that treats AI workflow and product design as one connected system.</p>
+              <p>A proof image is intentionally omitted until a real screenshot exists.</p>
+            </article>
+          </section>
+
+          <section id="skills" class="fallback-shell" aria-labelledby="fallback-skills-title">
+            <h2 id="fallback-skills-title">Engineering with product judgment.</h2>
+            <p>React, Next.js, TypeScript, HTML, and CSS for responsive interfaces; C#/.NET, Blazor Server, SQL Server, Entity Framework Core, Prisma, and REST APIs for dependable systems.</p>
+            <p>GitHub Copilot and Claude support development, debugging, and automation, alongside a visual eye for hierarchy, interaction, and clarity.</p>
+          </section>
+
+          <section id="contact" class="fallback-shell" aria-labelledby="fallback-contact-title">
+            <h2 id="fallback-contact-title">Let's build something clear and useful.</h2>
+            <p>Reach out to discuss a role, a product idea, or the next practical experiment.</p>
+            <div class="fallback-actions">
+              <a class="fallback-button" href="mailto:firzenfu@gmail.com">Let's talk</a>
+              <a class="fallback-text-link" href="https://github.com/firzenfu">GitHub profile</a>
+            </div>
+          </section>
+        </main>
+
+        <footer class="fallback-footer">Franky Fu. Software developer.</footer>
+      </div>
+    </div>
+    <noscript>
+      <p class="fallback-script-note">JavaScript is disabled. The portfolio summary above remains available; enable JavaScript for the cinematic version.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
