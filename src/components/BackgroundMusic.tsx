@@ -1,51 +1,135 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const STORAGE_KEY = 'franky-portfolio:background-music-muted'
-const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta', 'Tab'])
+const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
 
 type PlaybackState = 'idle' | 'playing' | 'muted' | 'unavailable'
 
 function storedMuted() {
-  return localStorage.getItem(STORAGE_KEY) === 'true'
+  try {
+    return localStorage.getItem(STORAGE_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+function persistMuted(muted: boolean) {
+  try {
+    localStorage.setItem(STORAGE_KEY, String(muted))
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+  }
 }
 
 export function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const activeAudioRef = useRef<HTMLAudioElement>(null)
   const attemptedAutoPlayRef = useRef(false)
+  const mountedRef = useRef(false)
+  const operationRef = useRef(0)
+  const activePlayOperationRef = useRef<number | null>(null)
+  const pendingPlayRef = useRef(false)
   const resumeAfterVisibilityRef = useRef(false)
-  const [state, setState] = useState<PlaybackState>(() => storedMuted() ? 'muted' : 'idle')
+  const stateRef = useRef<PlaybackState>(storedMuted() ? 'muted' : 'idle')
+  const [state, setState] = useState<PlaybackState>(stateRef.current)
 
-  const start = useCallback(async () => {
+  const setPlaybackState = useCallback((next: PlaybackState) => {
+    stateRef.current = next
+    setState(next)
+  }, [])
+
+  const invalidatePendingPlay = useCallback(() => {
+    operationRef.current += 1
+    activePlayOperationRef.current = null
+    pendingPlayRef.current = false
+    const activeAudio = audioRef.current ?? activeAudioRef.current
+    activeAudio?.pause()
+  }, [])
+
+  const requestPlayback = useCallback(() => {
     const audio = audioRef.current
-    if (!audio || state === 'unavailable') return
+    if (
+      !audio ||
+      !mountedRef.current ||
+      document.visibilityState !== 'visible' ||
+      stateRef.current === 'unavailable' ||
+      pendingPlayRef.current
+    ) return
+
+    const request = ++operationRef.current
+    activePlayOperationRef.current = request
+    pendingPlayRef.current = true
+    activeAudioRef.current = audio
     audio.volume = 0.22
-    try {
-      await audio.play()
-      localStorage.setItem(STORAGE_KEY, 'false')
-      setState('playing')
-    } catch {
-      setState((current) => current === 'muted' ? 'muted' : 'idle')
-    }
-  }, [state])
+
+    void Promise.resolve(audio.play()).then(
+      () => {
+        const canKeepPlaying =
+          mountedRef.current &&
+          request === operationRef.current &&
+          stateRef.current !== 'muted' &&
+          stateRef.current !== 'unavailable' &&
+          document.visibilityState === 'visible'
+
+        if (!canKeepPlaying) {
+          if (activePlayOperationRef.current === request || activePlayOperationRef.current === null) {
+            audio.pause()
+          }
+          return
+        }
+
+        pendingPlayRef.current = false
+        persistMuted(false)
+        setPlaybackState('playing')
+      },
+      () => {
+        if (!mountedRef.current || request !== operationRef.current) return
+
+        activePlayOperationRef.current = null
+        pendingPlayRef.current = false
+        if (stateRef.current !== 'muted' && stateRef.current !== 'unavailable') {
+          setPlaybackState('idle')
+        }
+      },
+    )
+  }, [setPlaybackState])
+
+  const activate = useCallback(() => {
+    if (stateRef.current === 'unavailable') return
+    if (stateRef.current === 'muted') setPlaybackState('idle')
+    requestPlayback()
+  }, [requestPlayback, setPlaybackState])
 
   const mute = useCallback(() => {
-    audioRef.current?.pause()
+    invalidatePendingPlay()
     resumeAfterVisibilityRef.current = false
-    localStorage.setItem(STORAGE_KEY, 'true')
-    setState('muted')
-  }, [])
+    persistMuted(true)
+    setPlaybackState('muted')
+  }, [invalidatePendingPlay, setPlaybackState])
+
+  const handleMediaError = useCallback(() => {
+    invalidatePendingPlay()
+    resumeAfterVisibilityRef.current = false
+    setPlaybackState('unavailable')
+  }, [invalidatePendingPlay, setPlaybackState])
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      invalidatePendingPlay()
+    }
+  }, [invalidatePendingPlay])
 
   useEffect(() => {
     if (state !== 'idle') return
     const begin = (event: PointerEvent | KeyboardEvent) => {
-      if (buttonRef.current?.contains(event.target as Node)) return
       if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return
       if (attemptedAutoPlayRef.current) return
       attemptedAutoPlayRef.current = true
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
-      void start()
+      activate()
     }
     document.addEventListener('pointerdown', begin)
     document.addEventListener('keydown', begin)
@@ -53,21 +137,21 @@ export function BackgroundMusic() {
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
     }
-  }, [start, state])
+  }, [activate, state])
 
   useEffect(() => {
     const handleVisibility = () => {
-      if (document.visibilityState === 'hidden' && state === 'playing') {
-        resumeAfterVisibilityRef.current = true
-        audioRef.current?.pause()
-      } else if (document.visibilityState === 'visible' && resumeAfterVisibilityRef.current && state === 'playing') {
+      if (document.visibilityState === 'hidden') {
+        resumeAfterVisibilityRef.current = stateRef.current === 'playing'
+        invalidatePendingPlay()
+      } else if (resumeAfterVisibilityRef.current && stateRef.current === 'playing') {
         resumeAfterVisibilityRef.current = false
-        void start()
+        requestPlayback()
       }
     }
     document.addEventListener('visibilitychange', handleVisibility)
     return () => document.removeEventListener('visibilitychange', handleVisibility)
-  }, [start, state])
+  }, [invalidatePendingPlay, requestPlayback])
 
   const unavailable = state === 'unavailable'
   const playing = state === 'playing'
@@ -84,16 +168,15 @@ export function BackgroundMusic() {
         src="/audio/title-arcana-ver2.mp3"
         preload="metadata"
         loop
-        onError={() => setState('unavailable')}
+        onError={handleMediaError}
       />
       <button
-        ref={buttonRef}
         className="music-control-button"
         type="button"
         aria-label={label}
         aria-pressed={unavailable ? undefined : playing}
         disabled={unavailable}
-        onClick={() => playing ? mute() : void start()}
+        onClick={() => playing ? mute() : activate()}
       >
         <span aria-hidden="true">♪</span>
       </button>

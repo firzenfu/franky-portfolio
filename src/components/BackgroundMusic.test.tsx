@@ -6,6 +6,16 @@ import { BackgroundMusic } from './BackgroundMusic'
 const play = vi.fn<() => Promise<void>>()
 const pause = vi.fn()
 
+function deferredPlay() {
+  let resolve!: () => void
+  let reject!: (reason?: unknown) => void
+  const promise = new Promise<void>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise
+    reject = rejectPromise
+  })
+  return { promise, reject, resolve }
+}
+
 beforeEach(() => {
   localStorage.clear()
   play.mockReset().mockResolvedValue(undefined)
@@ -29,12 +39,25 @@ describe('BackgroundMusic', () => {
 
     expect(play).toHaveBeenCalledTimes(1)
     expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+    const audio = document.querySelector('audio')!
+    expect(audio).toHaveAttribute('src', '/audio/title-arcana-ver2.mp3')
+    expect(audio).toHaveAttribute('preload', 'metadata')
+    expect(audio).toHaveAttribute('loop')
+    expect(audio.volume).toBe(0.22)
   })
 
-  it('ignores modifier-only key interactions', () => {
+  it('ignores only modifier-only key interactions while allowing Tab', () => {
     render(<BackgroundMusic />)
     fireEvent.keyDown(document, { key: 'Shift' })
     expect(play).not.toHaveBeenCalled()
+
+    fireEvent.keyDown(document, { key: 'Control' })
+    fireEvent.keyDown(document, { key: 'Alt' })
+    fireEvent.keyDown(document, { key: 'Meta' })
+    expect(play).not.toHaveBeenCalled()
+
+    fireEvent.keyDown(document, { key: 'Tab' })
+    expect(play).toHaveBeenCalledTimes(1)
 
     fireEvent.keyDown(document, { key: 'a' })
     expect(play).toHaveBeenCalledTimes(1)
@@ -100,5 +123,134 @@ describe('BackgroundMusic', () => {
 
     await user.click(screen.getByRole('button', { name: 'Play background music' }))
     expect(play).toHaveBeenCalledTimes(2)
+  })
+
+  it('invalidates an initial play that resolves after the page hides', async () => {
+    let visibilityState: DocumentVisibilityState = 'visible'
+    vi.spyOn(document, 'visibilityState', 'get').mockImplementation(() => visibilityState)
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    expect(play).toHaveBeenCalledTimes(1)
+
+    visibilityState = 'hidden'
+    fireEvent(document, new Event('visibilitychange'))
+    pending.resolve()
+    await act(async () => undefined)
+
+    expect(pause).toHaveBeenCalledTimes(2)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('keeps mute state when a visibility resume resolves after explicit muting', async () => {
+    let visibilityState: DocumentVisibilityState = 'visible'
+    vi.spyOn(document, 'visibilityState', 'get').mockImplementation(() => visibilityState)
+    const resumedPlay = deferredPlay()
+    play.mockResolvedValueOnce(undefined).mockImplementationOnce(() => resumedPlay.promise)
+    const user = userEvent.setup()
+    render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    await screen.findByRole('button', { name: 'Mute background music' })
+    visibilityState = 'hidden'
+    fireEvent(document, new Event('visibilitychange'))
+    visibilityState = 'visible'
+    fireEvent(document, new Event('visibilitychange'))
+    expect(play).toHaveBeenCalledTimes(2)
+
+    await user.click(screen.getByRole('button', { name: 'Mute background music' }))
+    resumedPlay.resolve()
+    await act(async () => undefined)
+
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+    expect(localStorage.getItem('franky-portfolio:background-music-muted')).toBe('true')
+  })
+
+  it('keeps the controller unavailable when media errors during pending playback', async () => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    const { container } = render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    fireEvent.error(container.querySelector('audio')!)
+    pending.resolve()
+    await act(async () => undefined)
+
+    expect(screen.getByRole('button', { name: 'Background music unavailable' })).toBeDisabled()
+    expect(pause).toHaveBeenCalled()
+  })
+
+  it('deduplicates rapid page gestures and control activation while playback is pending', async () => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    fireEvent.keyDown(document, { key: 'a' })
+    fireEvent.click(screen.getByRole('button', { name: 'Play background music' }))
+    expect(play).toHaveBeenCalledTimes(1)
+
+    pending.resolve()
+    await act(async () => undefined)
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('deduplicates a control pointerdown followed by its click', async () => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.pointerDown(control)
+    fireEvent.click(control)
+    expect(play).toHaveBeenCalledTimes(1)
+
+    pending.resolve()
+    await act(async () => undefined)
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('defaults to unmuted when local storage cannot be read', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('Storage unavailable')
+    })
+    render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    expect(play).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps successful playback and mute state when local storage cannot be written', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage unavailable')
+    })
+    const user = userEvent.setup()
+    render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    await screen.findByRole('button', { name: 'Mute background music' })
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toBeEnabled()
+
+    await user.click(screen.getByRole('button', { name: 'Mute background music' }))
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('invalidates pending playback and removes document listeners on unmount', async () => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    const removeListener = vi.spyOn(document, 'removeEventListener')
+    const { unmount } = render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(document.body)
+    unmount()
+    pending.resolve()
+    await act(async () => undefined)
+
+    expect(pause).toHaveBeenCalled()
+    expect(removeListener.mock.calls.filter(([type]) => type === 'pointerdown').length).toBeGreaterThanOrEqual(1)
+    expect(removeListener.mock.calls.filter(([type]) => type === 'keydown').length).toBeGreaterThanOrEqual(1)
+    expect(removeListener.mock.calls.filter(([type]) => type === 'visibilitychange').length).toBeGreaterThanOrEqual(1)
   })
 })
