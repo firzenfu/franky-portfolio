@@ -1,7 +1,11 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+// @ts-expect-error The app build intentionally omits test-only Node declarations.
+import { readFileSync } from 'node:fs'
 import { BackgroundMusic } from './BackgroundMusic'
+
+const styles = readFileSync('src/styles.css', 'utf8')
 
 const play = vi.fn<() => Promise<void>>()
 const pause = vi.fn()
@@ -111,6 +115,18 @@ describe('BackgroundMusic', () => {
     const { container } = render(<BackgroundMusic />)
     fireEvent.error(container.querySelector('audio')!)
     expect(screen.getByRole('button', { name: 'Background music unavailable' })).toBeDisabled()
+  })
+
+  it('keeps the unavailable control visibly readable', () => {
+    const stylesheet = document.createElement('style')
+    stylesheet.textContent = styles
+    document.head.append(stylesheet)
+    const { container } = render(<BackgroundMusic />)
+    fireEvent.error(container.querySelector('audio')!)
+
+    const control = screen.getByRole('button', { name: 'Background music unavailable' })
+    expect(Number.parseFloat(getComputedStyle(control).opacity)).toBeGreaterThanOrEqual(0.55)
+    stylesheet.remove()
   })
 
   it('keeps an explicit retry available after a rejected play promise', async () => {
@@ -234,6 +250,22 @@ describe('BackgroundMusic', () => {
     expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
   })
 
+  it('consumes the paired click after a pointer is held longer than the cleanup window', async () => {
+    vi.useFakeTimers()
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.pointerDown(control, { button: 0, pointerId: 7 })
+    await act(async () => undefined)
+    await act(async () => vi.advanceTimersByTime(1500))
+    fireEvent.pointerUp(control, { button: 0, pointerId: 7 })
+    fireEvent.click(control)
+
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(pause).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
   it.each(['Tab', 'a'])('does not suppress a later control click after %s starts playback', async (key) => {
     const pending = deferredPlay()
     play.mockImplementationOnce(() => pending.promise)
@@ -274,6 +306,49 @@ describe('BackgroundMusic', () => {
     expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
   })
 
+  it('consumes the paired click after Space is held longer than the cleanup window', async () => {
+    vi.useFakeTimers()
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.keyDown(control, { key: ' ' })
+    await act(async () => undefined)
+    await act(async () => vi.advanceTimersByTime(1500))
+    fireEvent.keyUp(control, { key: ' ' })
+    fireEvent.click(control)
+
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(pause).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('clears pointer click pairing when the activation is cancelled', async () => {
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.pointerDown(control, { button: 0, pointerId: 7 })
+    await act(async () => undefined)
+    fireEvent.pointerCancel(control, { pointerId: 7 })
+    fireEvent.click(control)
+
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('clears keyboard click pairing when the control loses focus', async () => {
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    control.focus()
+    fireEvent.keyDown(control, { key: ' ' })
+    await act(async () => undefined)
+    fireEvent.blur(control)
+    fireEvent.click(control)
+
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
   it('cleans a control click pairing when no paired click occurs', async () => {
     vi.useFakeTimers()
     const pending = deferredPlay()
@@ -284,6 +359,7 @@ describe('BackgroundMusic', () => {
     fireEvent.pointerDown(control)
     pending.resolve()
     await act(async () => undefined)
+    fireEvent.pointerUp(control)
     await act(async () => vi.advanceTimersByTime(1000))
 
     fireEvent.click(control)
@@ -297,7 +373,9 @@ describe('BackgroundMusic', () => {
     const removeListener = vi.spyOn(document, 'removeEventListener')
     const { unmount } = render(<BackgroundMusic />)
 
-    fireEvent.pointerDown(screen.getByRole('button', { name: 'Play background music' }))
+    const control = screen.getByRole('button', { name: 'Play background music' })
+    fireEvent.pointerDown(control)
+    fireEvent.pointerUp(control)
     unmount()
 
     expect(clearTimeout).toHaveBeenCalled()

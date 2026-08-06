@@ -54,19 +54,40 @@ export function BackgroundMusic() {
     cleanup?.()
   }, [])
 
-  const pairControlClick = useCallback(() => {
+  const pairControlClick = useCallback((activationEvent: PointerEvent | KeyboardEvent) => {
     clearPairedControlClick()
     const control = buttonRef.current
     if (!control) return
 
     let timeout: number | undefined
+    const pointerId = activationEvent instanceof PointerEvent ? activationEvent.pointerId : null
+    const activationKey = activationEvent instanceof KeyboardEvent ? activationEvent.key : null
     const consumeClick = (event: MouseEvent) => {
       const pairedControlClick = control.contains(event.target as Node)
       cleanup()
       if (pairedControlClick) event.stopPropagation()
     }
+    const beginMissingClickCleanup = () => {
+      if (timeout === undefined) {
+        timeout = window.setTimeout(cleanup, CONTROL_CLICK_PAIR_TIMEOUT_MS)
+      }
+    }
+    const handlePointerUp = (event: PointerEvent) => {
+      if (pointerId !== null && event.pointerId === pointerId) beginMissingClickCleanup()
+    }
+    const handlePointerCancel = (event: PointerEvent) => {
+      if (pointerId !== null && event.pointerId === pointerId) cleanup()
+    }
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (activationKey !== null && event.key === activationKey) beginMissingClickCleanup()
+    }
     const cleanup = () => {
       document.removeEventListener('click', consumeClick, true)
+      document.removeEventListener('pointerup', handlePointerUp, true)
+      document.removeEventListener('pointercancel', handlePointerCancel, true)
+      document.removeEventListener('keyup', handleKeyUp, true)
+      control.removeEventListener('blur', cleanup)
+      window.removeEventListener('blur', cleanup)
       if (timeout !== undefined) window.clearTimeout(timeout)
       if (pairedControlClickCleanupRef.current === cleanup) {
         pairedControlClickCleanupRef.current = null
@@ -74,7 +95,14 @@ export function BackgroundMusic() {
     }
 
     document.addEventListener('click', consumeClick, true)
-    timeout = window.setTimeout(cleanup, CONTROL_CLICK_PAIR_TIMEOUT_MS)
+    if (pointerId !== null) {
+      document.addEventListener('pointerup', handlePointerUp, true)
+      document.addEventListener('pointercancel', handlePointerCancel, true)
+    } else {
+      document.addEventListener('keyup', handleKeyUp, true)
+    }
+    control.addEventListener('blur', cleanup)
+    window.addEventListener('blur', cleanup)
     pairedControlClickCleanupRef.current = cleanup
   }, [clearPairedControlClick])
 
@@ -168,7 +196,7 @@ export function BackgroundMusic() {
       if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return
       if (attemptedAutoPlayRef.current) return
       attemptedAutoPlayRef.current = true
-      if (buttonRef.current && canPairControlClick(event, buttonRef.current)) pairControlClick()
+      if (buttonRef.current && canPairControlClick(event, buttonRef.current)) pairControlClick(event)
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
       activate()
