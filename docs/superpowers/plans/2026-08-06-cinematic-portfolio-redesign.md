@@ -417,7 +417,7 @@ describe('SceneVideo', () => {
   it('falls back to the poster after video failure', () => {
     render(<SceneVideo src="/scene.mp4" poster="/poster.jpg" />)
     fireEvent.error(screen.getByTestId('scene-video'))
-    expect(screen.getByRole('img', { name: '' })).toHaveAttribute('src', '/poster.jpg')
+    expect(screen.getByTestId('scene-poster')).toHaveAttribute('src', '/poster.jpg')
   })
 
   it('renders decorative video muted and outside the tab order', () => {
@@ -481,7 +481,7 @@ export function SceneVideo({ src, mobileSrc, poster, priority = false, className
           <source src={src} type="video/mp4" />
         </video>
       ) : (
-        <img src={poster} alt="" aria-hidden="true" />
+        <img data-testid="scene-poster" src={poster} alt="" aria-hidden="true" />
       )}
       <span className="scene-scrim" aria-hidden="true" />
     </div>
