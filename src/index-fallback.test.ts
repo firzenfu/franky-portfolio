@@ -36,4 +36,18 @@ describe('index fallback', () => {
     const noscriptText = document.querySelector('noscript')?.textContent ?? ''
     expect(noscriptText).not.toContain('Bikes R Us')
   })
+
+  it('keeps fallback labels restrained and links tactile without overriding reduced motion', () => {
+    const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
+    const document = new JSDOM(html).window.document
+    const root = document.querySelector('#root')
+    const css = document.querySelector('head style')?.textContent ?? ''
+
+    expect(root?.querySelectorAll('.fallback-kicker').length).toBeLessThanOrEqual(2)
+    expect(css).toContain('.fallback-app a:hover')
+    expect(css).toContain('.fallback-app a:active')
+    expect(css).toContain('.fallback-app a:focus-visible')
+    expect(css).toContain('@media (prefers-reduced-motion: reduce)')
+    expect(css).toMatch(/\.fallback-app a:hover,[\s\S]*?transform:\s*none/)
+  })
 })

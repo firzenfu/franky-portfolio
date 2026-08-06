@@ -69,6 +69,30 @@
         text-underline-offset: 0.25em;
       }
 
+      .fallback-app a {
+        display: inline-block;
+        transition:
+          transform 180ms ease,
+          opacity 180ms ease,
+          color 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .fallback-app a:hover {
+        opacity: 0.82;
+        transform: translateY(-2px);
+      }
+
+      .fallback-app a:active {
+        opacity: 0.72;
+        transform: translateY(1px);
+      }
+
+      .fallback-wordmark:hover,
+      .fallback-text-link:hover {
+        color: #f2f1eb;
+      }
+
       .fallback-app section {
         padding-block: clamp(56px, 9vw, 112px);
         border-bottom: 1px solid rgb(242 241 235 / 14%);
@@ -115,7 +139,6 @@
       }
 
       .fallback-button {
-        display: inline-block;
         border: 2px solid #d7ff43;
         border-radius: 999px;
         padding: 12px 18px;
@@ -123,6 +146,11 @@
         background: #d7ff43;
         font-weight: 800;
         text-decoration: none;
+      }
+
+      .fallback-button:hover {
+        border-color: #f2f1eb;
+        color: #f2f1eb;
       }
 
       .fallback-project {
@@ -141,6 +169,20 @@
       .fallback-app a:focus-visible {
         outline: 3px solid #d7ff43;
         outline-offset: 5px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .fallback-app a {
+          transition:
+            opacity 120ms linear,
+            color 120ms linear,
+            border-color 120ms linear;
+        }
+
+        .fallback-app a:hover,
+        .fallback-app a:active {
+          transform: none;
+        }
       }
 
       .fallback-footer,
@@ -179,14 +221,12 @@
           </section>
 
           <section id="about" class="fallback-shell" aria-labelledby="fallback-about-title">
-            <p class="fallback-kicker">About</p>
             <h2 id="fallback-about-title">Developer by training. Designer in spirit.</h2>
             <p>I build full-stack products with clear systems, considered interfaces, and practical AI workflows.</p>
             <p>Based in Edmonton and studying Software Development at NAIT, I bring care for product clarity to frontend, backend, database, and testing work.</p>
           </section>
 
           <section id="work" class="fallback-shell" aria-labelledby="fallback-work-title">
-            <p class="fallback-kicker">Selected work</p>
             <h2 id="fallback-work-title">Products built around real workflows.</h2>
 
             <article class="fallback-project">
@@ -212,14 +252,12 @@
           </section>
 
           <section id="skills" class="fallback-shell" aria-labelledby="fallback-skills-title">
-            <p class="fallback-kicker">Skills</p>
             <h2 id="fallback-skills-title">Engineering with product judgment.</h2>
             <p>React, Next.js, TypeScript, HTML, and CSS for responsive interfaces; C#/.NET, Blazor Server, SQL Server, Entity Framework Core, Prisma, and REST APIs for dependable systems.</p>
             <p>GitHub Copilot and Claude support development, debugging, and automation, alongside a visual eye for hierarchy, interaction, and clarity.</p>
           </section>
 
           <section id="contact" class="fallback-shell" aria-labelledby="fallback-contact-title">
-            <p class="fallback-kicker">Contact</p>
             <h2 id="fallback-contact-title">Let's build something clear and useful.</h2>
             <p>Reach out to discuss a role, a product idea, or the next practical experiment.</p>
             <div class="fallback-actions">
