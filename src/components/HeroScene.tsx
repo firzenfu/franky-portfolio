@@ -32,8 +32,8 @@ export function HeroScene() {
       >
         <p className="hero-kicker">Franky Fu, software developer</p>
         <h1 aria-label="Software with a point of view.">
-          <span aria-hidden="true">Software with a point</span>
-          <span aria-hidden="true">of view.</span>
+          <span aria-hidden="true">Software with a</span>
+          <span aria-hidden="true">point of view.</span>
         </h1>
         <p className="hero-summary">I build full-stack products with clear systems, considered interfaces, and practical AI workflows.</p>
         <a className="button button-primary" href="#work">View work</a>

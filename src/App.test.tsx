@@ -33,4 +33,11 @@ describe('portfolio shell', () => {
     expect(screen.getByRole('heading', { name: /software with a point of view/i })).toBeInTheDocument()
     expect(screen.queryByText(/01 \/|02 \/|03 \/|04 \/|scroll to explore/i)).not.toBeInTheDocument()
   })
+
+  it('balances the two hero lines for narrow viewports', () => {
+    const { container } = render(<App />)
+    const lines = [...container.querySelectorAll('.hero-copy h1 span')]
+
+    expect(lines.map((line) => line.textContent)).toEqual(['Software with a', 'point of view.'])
+  })
 })
