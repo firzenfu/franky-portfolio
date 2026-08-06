@@ -905,6 +905,11 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .contact-scene-layout,
+  .site-footer {
+    padding-right: 42px;
+  }
+
   .capability-entry,
   .capability-entry:first-child,
   .capability-entry:nth-child(4) {
@@ -1012,11 +1017,6 @@ textarea:focus-visible {
 
   .contact-scene-layout {
     gap: 58px;
-  }
-
-  .contact-scene-layout,
-  .site-footer {
-    padding-right: 42px;
   }
 
   .contact-form {
