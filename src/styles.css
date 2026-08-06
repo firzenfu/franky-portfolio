@@ -1014,6 +1014,11 @@ textarea:focus-visible {
     gap: 58px;
   }
 
+  .contact-scene-layout,
+  .site-footer {
+    padding-right: 42px;
+  }
+
   .contact-form {
     padding: 24px 18px;
   }
