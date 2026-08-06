@@ -37,6 +37,12 @@ describe('SceneVideo', () => {
     expect(video).toHaveProperty('playsInline', true)
   })
 
+  it('does not preload non-priority video data', () => {
+    render(<SceneVideo src="/scene.mp4" poster="/poster.jpg" />)
+
+    expect(screen.getByTestId('scene-video')).toHaveAttribute('preload', 'none')
+  })
+
   it('renders the mobile source for the mobile breakpoint', () => {
     render(<SceneVideo src="/scene.mp4" mobileSrc="/scene-mobile.mp4" poster="/poster.jpg" />)
 

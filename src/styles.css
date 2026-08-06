@@ -364,6 +364,15 @@ textarea:focus-visible {
   margin: 0 auto;
 }
 
+.project-frame-copy-only {
+  grid-template-columns: minmax(0, 720px);
+  justify-content: center;
+}
+
+.project-frame-copy-only .project-copy {
+  max-width: 720px;
+}
+
 .project-copy {
   position: relative;
   z-index: 1;
@@ -486,6 +495,10 @@ textarea:focus-visible {
   grid-template-columns: minmax(440px, 1.28fr) minmax(280px, 0.72fr);
 }
 
+.project-chapter:nth-child(even) .project-frame-copy-only {
+  grid-template-columns: minmax(0, 720px);
+}
+
 .project-chapter:nth-child(even) .project-copy {
   order: 2;
 }
@@ -549,6 +562,53 @@ textarea:focus-visible {
 
 .contact-links a:hover {
   border-color: var(--accent);
+}
+
+@media (max-width: 879px) {
+  .work-heading {
+    padding: 104px 20px 76px;
+  }
+
+  .project-chapter {
+    display: block;
+    min-height: auto;
+    padding: 84px 20px 96px;
+  }
+
+  .project-frame,
+  .project-chapter:nth-child(even) .project-frame {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    min-height: 0;
+    transform: none !important;
+  }
+
+  .project-chapter:nth-child(even) .project-copy,
+  .project-chapter:nth-child(even) .project-proof {
+    order: initial;
+  }
+
+  .project-copy {
+    max-width: none;
+  }
+
+  .project-copy h3 {
+    font-size: clamp(3rem, 17vw, 5.2rem);
+  }
+
+  .project-proof,
+  .project-chapter:nth-child(even) .project-proof,
+  .project-chapter:nth-child(3n) .project-proof {
+    width: 100%;
+    margin: 0;
+    transform: none;
+  }
+
+  .project-atmosphere video,
+  .project-atmosphere img {
+    opacity: 0.24;
+  }
 }
 
 @media (max-width: 767px) {
@@ -616,51 +676,6 @@ textarea:focus-visible {
   .capability-list,
   .contact-layout > div:last-child {
     padding-top: 0;
-  }
-
-  .work-heading {
-    padding: 104px 20px 76px;
-  }
-
-  .project-chapter {
-    display: block;
-    min-height: auto;
-    padding: 84px 20px 96px;
-  }
-
-  .project-frame,
-  .project-chapter:nth-child(even) .project-frame {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 48px;
-    min-height: 0;
-    transform: none !important;
-  }
-
-  .project-chapter:nth-child(even) .project-copy,
-  .project-chapter:nth-child(even) .project-proof {
-    order: initial;
-  }
-
-  .project-copy {
-    max-width: none;
-  }
-
-  .project-copy h3 {
-    font-size: clamp(3rem, 17vw, 5.2rem);
-  }
-
-  .project-proof,
-  .project-chapter:nth-child(even) .project-proof,
-  .project-chapter:nth-child(3n) .project-proof {
-    width: 100%;
-    margin: 0;
-    transform: none;
-  }
-
-  .project-atmosphere video,
-  .project-atmosphere img {
-    opacity: 0.24;
   }
 }
 

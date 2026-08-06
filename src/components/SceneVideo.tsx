@@ -27,7 +27,7 @@ export function SceneVideo({ src, mobileSrc, poster, priority = false, className
           loop
           playsInline
           poster={poster}
-          preload={priority ? 'auto' : 'metadata'}
+          preload={priority ? 'auto' : 'none'}
           onError={() => setFailed(true)}
         >
           {mobileSrc && <source src={mobileSrc} media="(max-width: 767px)" type="video/mp4" />}

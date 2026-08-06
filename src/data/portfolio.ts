@@ -3,7 +3,7 @@ export type Project = {
   title: string
   subtitle: string
   year: string
-  image: string
+  image?: string
   href: string
   stack: string[]
   problem: string
@@ -53,7 +53,6 @@ export const projects: Project[] = [
     title: 'Next Experiment',
     subtitle: 'AI-native Product',
     year: 'Soon',
-    image: '/images/next-experiment-v2.png',
     href: 'https://github.com/firzenfu',
     stack: ['AI Workflow', 'TypeScript', 'Product Design'],
     problem: 'Exploring how AI-native workflows can move from isolated prompts into a coherent product experience.',

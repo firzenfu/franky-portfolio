@@ -48,5 +48,6 @@ describe('portfolio shell', () => {
     }
     expect(screen.getAllByRole('link', { name: 'Open project' })).toHaveLength(3)
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: 'Next Experiment interface' })).not.toBeInTheDocument()
   })
 })
