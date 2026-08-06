@@ -7,8 +7,11 @@ import { describe, expect, it } from 'vitest'
 const styles = readFileSync('src/styles.css', 'utf8')
 
 describe('responsive fixed-control clearance', () => {
-  it('reserves the contact rail only through the single-column breakpoint', () => {
-    const desktopStyles = styles.slice(0, styles.indexOf('@media (max-width: 879px)'))
+  it('buffers the contact rail below the 900px desktop boundary', () => {
+    const desktopStyles = styles.slice(0, styles.indexOf('@media (max-width: 899px)'))
+    const bufferedRailStyles = styles.match(
+      /@media \(max-width: 899px\) \{([\s\S]*?)\r?\n\}\r?\n\r?\n@media \(max-width: 879px\)/,
+    )?.[1]
     const singleColumnStyles = styles.match(
       /@media \(max-width: 879px\) \{([\s\S]*?)\r?\n\}\r?\n\r?\n@media \(max-width: 767px\)/,
     )?.[1]
@@ -20,7 +23,8 @@ describe('responsive fixed-control clearance', () => {
     const mobileControlStyles = styles.slice(mobileControlStart, mobileControlEnd)
     const railRule = /\.contact-scene-layout,\s*\.site-footer\s*\{\s*padding-right:\s*42px;\s*\}/
 
-    expect(singleColumnStyles).toMatch(railRule)
+    expect(bufferedRailStyles).toMatch(railRule)
+    expect(singleColumnStyles).not.toMatch(railRule)
     expect(mobileLayoutStyles).not.toMatch(railRule)
     expect(desktopStyles).not.toMatch(railRule)
     expect(mobileControlStyles).toMatch(/\.music-control\s*\{[\s\S]*?right:\s*16px;/)

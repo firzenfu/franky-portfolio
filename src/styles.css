@@ -853,6 +853,13 @@ textarea:focus-visible {
   color: var(--text);
 }
 
+@media (max-width: 899px) {
+  .contact-scene-layout,
+  .site-footer {
+    padding-right: 42px;
+  }
+}
+
 @media (max-width: 879px) {
   .work-heading {
     padding: 104px 20px 76px;
@@ -903,11 +910,6 @@ textarea:focus-visible {
   .experience-timeline,
   .contact-scene-layout {
     grid-template-columns: 1fr;
-  }
-
-  .contact-scene-layout,
-  .site-footer {
-    padding-right: 42px;
   }
 
   .capability-entry,
