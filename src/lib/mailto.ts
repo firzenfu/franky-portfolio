@@ -11,3 +11,7 @@ export function buildMailtoUrl(input: ContactMessage) {
   )
   return `mailto:firzenfu@gmail.com?subject=${subject}&body=${body}`
 }
+
+export function navigateToMailto(url: string, target: Pick<Location, 'href'> = window.location) {
+  target.href = url
+}

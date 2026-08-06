@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import { sceneMedia } from '../data/media'
-import { buildMailtoUrl } from '../lib/mailto'
+import { buildMailtoUrl, navigateToMailto } from '../lib/mailto'
 import { SceneVideo } from './SceneVideo'
 
 export function ContactScene() {
@@ -15,7 +15,7 @@ export function ContactScene() {
       message: String(data.get('message') ?? ''),
     })
 
-    window.location.href = url
+    navigateToMailto(url)
   }
 
   return (
@@ -30,7 +30,7 @@ export function ContactScene() {
         <div className="contact-intro">
           <h2>Bring me the next problem.</h2>
           <p>Have a product role, project, or useful idea? Send the context and I will get back to you.</p>
-          <a className="contact-text-link" href="mailto:firzenfu@gmail.com" aria-label="Email Franky Fu">
+          <a className="contact-text-link" href="mailto:firzenfu@gmail.com" aria-label="Let's talk with Franky Fu">
             Let's talk
           </a>
         </div>

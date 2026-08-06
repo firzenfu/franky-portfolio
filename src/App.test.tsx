@@ -2,6 +2,16 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+import { buildMailtoUrl, navigateToMailto } from './lib/mailto'
+
+vi.mock('./lib/mailto', async () => {
+  const actual = await vi.importActual<typeof import('./lib/mailto')>('./lib/mailto')
+  return {
+    ...actual,
+    buildMailtoUrl: vi.fn(actual.buildMailtoUrl),
+    navigateToMailto: vi.fn(),
+  }
+})
 
 class ObserverStub {
   observe() {}
@@ -12,7 +22,10 @@ class ObserverStub {
 vi.stubGlobal('IntersectionObserver', ObserverStub)
 vi.stubGlobal('ResizeObserver', ObserverStub)
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  vi.clearAllMocks()
+})
 
 describe('portfolio shell', () => {
   it('preserves navigation labels and section anchors', () => {
@@ -60,12 +73,27 @@ describe('portfolio shell', () => {
     expect(screen.getByRole('heading', { name: 'NAIT' })).toBeInTheDocument()
   })
 
+  it('keeps the visible contact label in the link accessible name', () => {
+    render(<App />)
+
+    expect(screen.getByRole('link', { name: "Let's talk with Franky Fu" })).toHaveTextContent("Let's talk")
+  })
+
   it('submits the accessible contact form through the mailto builder', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.type(screen.getByLabelText('Name'), 'Ada Wong')
     await user.type(screen.getByLabelText('Email'), 'ada@example.com')
     await user.type(screen.getByLabelText('Message'), 'A product role in Edmonton.')
-    expect(screen.getByRole('button', { name: 'Send message' })).toBeEnabled()
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(buildMailtoUrl).toHaveBeenCalledWith({
+      name: 'Ada Wong',
+      email: 'ada@example.com',
+      message: 'A product role in Edmonton.',
+    })
+    expect(navigateToMailto).toHaveBeenCalledWith(
+      'mailto:firzenfu@gmail.com?subject=Portfolio%20enquiry%20from%20Ada%20Wong&body=Name%3A%20Ada%20Wong%0AEmail%3A%20ada%40example.com%0A%0AA%20product%20role%20in%20Edmonton.',
+    )
   })
 })

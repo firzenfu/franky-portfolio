@@ -329,7 +329,7 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius-media);
   background: var(--surface-raised);
-  box-shadow: 0 34px 90px rgb(0 0 0 / 34%);
+  box-shadow: 0 34px 90px rgb(5 12 13 / 38%);
 }
 
 .about-portrait img {
@@ -765,7 +765,7 @@ textarea:focus-visible {
   border-radius: var(--radius-media);
   background: rgb(13 15 16 / 78%);
   backdrop-filter: blur(16px);
-  box-shadow: 0 32px 90px rgb(0 0 0 / 30%);
+  box-shadow: 0 32px 90px rgb(5 12 13 / 34%);
 }
 
 .form-field {
