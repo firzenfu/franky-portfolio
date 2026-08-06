@@ -853,7 +853,7 @@ textarea:focus-visible {
   color: var(--text);
 }
 
-@media (max-width: 899px) {
+@media (width < 900px) {
   .contact-scene-layout,
   .site-footer {
     padding-right: 42px;
