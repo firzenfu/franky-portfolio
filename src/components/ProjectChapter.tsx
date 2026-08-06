@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import type { SceneMedia } from '../data/media'
 import type { Project } from '../data/portfolio'
-import { SceneVideo } from './SceneVideo'
+import { useViewportMedia } from '../hooks/useViewportMedia'
+import { ScenePoster, SceneVideo } from './SceneVideo'
 
 export type ProjectChapterProps = {
   project: Project
@@ -13,7 +14,7 @@ export type ProjectChapterProps = {
 export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
   const chapterRef = useRef<HTMLElement>(null)
   const reducedMotion = Boolean(useReducedMotion())
-  const [mediaActive, setMediaActive] = useState(false)
+  const mediaActive = useViewportMedia(chapterRef, { disabled: reducedMotion })
   const [proofFailed, setProofFailed] = useState(false)
   const { scrollYProgress } = useScroll({
     target: chapterRef,
@@ -23,27 +24,6 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.985, 1, 0.985])
   const headingId = `${project.slug}-title`
   const hasProof = Boolean(project.image) && !proofFailed
-
-  useEffect(() => {
-    const chapter = chapterRef.current
-    if (!chapter) return
-    if (typeof IntersectionObserver === 'undefined') {
-      setMediaActive(true)
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-        setMediaActive(true)
-        observer.disconnect()
-      },
-      { rootMargin: '600px 0px', threshold: 0.01 },
-    )
-
-    observer.observe(chapter)
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <article
@@ -60,15 +40,11 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
           poster={media.poster}
         />
       ) : (
-        <div className="scene-media project-atmosphere">
-          <img
-            data-testid="project-atmosphere-poster"
-            src={media.poster}
-            alt=""
-            aria-hidden="true"
-          />
-          <span className="scene-scrim" aria-hidden="true" />
-        </div>
+        <ScenePoster
+          className="project-atmosphere"
+          poster={media.poster}
+          testId="project-atmosphere-poster"
+        />
       )}
       <motion.div
         className={`project-frame${hasProof ? '' : ' project-frame-copy-only'}`}

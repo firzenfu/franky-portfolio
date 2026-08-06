@@ -1,9 +1,14 @@
-import type { FormEvent } from 'react'
+import { useRef, type FormEvent } from 'react'
+import { useReducedMotion } from 'framer-motion'
 import { sceneMedia } from '../data/media'
+import { useViewportMedia } from '../hooks/useViewportMedia'
 import { buildMailtoUrl, navigateToMailto } from '../lib/mailto'
-import { SceneVideo } from './SceneVideo'
+import { ScenePoster, SceneVideo } from './SceneVideo'
 
 export function ContactScene() {
+  const contactRef = useRef<HTMLElement>(null)
+  const reducedMotion = Boolean(useReducedMotion())
+  const mediaActive = useViewportMedia(contactRef, { disabled: reducedMotion })
   const contactMedia = sceneMedia.contact
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -19,13 +24,21 @@ export function ContactScene() {
   }
 
   return (
-    <section className="contact-scene" id="contact">
-      <SceneVideo
-        className="contact-media"
-        src={contactMedia.video}
-        mobileSrc={contactMedia.mobileVideo}
-        poster={contactMedia.poster}
-      />
+    <section ref={contactRef} className="contact-scene" id="contact">
+      {mediaActive ? (
+        <SceneVideo
+          className="contact-media"
+          src={contactMedia.video}
+          mobileSrc={contactMedia.mobileVideo}
+          poster={contactMedia.poster}
+        />
+      ) : (
+        <ScenePoster
+          className="contact-media"
+          poster={contactMedia.poster}
+          testId="contact-atmosphere-poster"
+        />
+      )}
       <div className="section-shell contact-scene-layout">
         <div className="contact-intro">
           <h2>Bring me the next problem.</h2>

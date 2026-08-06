@@ -93,7 +93,7 @@ describe('ProjectChapter', () => {
     )
   })
 
-  it('defers project video until the chapter is near the viewport', () => {
+  it('mounts project video only while the chapter is near the viewport and supports re-entry', () => {
     render(<ProjectChapter project={project} media={media} index={0} />)
 
     expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
@@ -101,23 +101,32 @@ describe('ProjectChapter', () => {
       'src',
       '/images/bikes-poster.jpg',
     )
+    expect(IntersectionObserverStub.instances[0].options?.rootMargin).toBe('600px 0px')
 
     act(() => IntersectionObserverStub.instances[0].trigger(true))
 
     const video = screen.getByTestId('scene-video')
     expect(video.querySelector('source[src="/video/bikes.mp4"]')).toBeInTheDocument()
     expect(video.querySelector('source[src="/video/bikes-mobile.mp4"]')).toBeInTheDocument()
+
+    act(() => IntersectionObserverStub.instances[0].trigger(false))
+    expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
+    expect(screen.getByTestId('project-atmosphere-poster')).toBeInTheDocument()
+
+    act(() => IntersectionObserverStub.instances[0].trigger(true))
+    expect(screen.getByTestId('scene-video')).toBeInTheDocument()
   })
 
   it('keeps the atmosphere on its poster under reduced motion', () => {
     vi.mocked(useReducedMotion).mockReturnValue(true)
     render(<ProjectChapter project={project} media={media} index={0} />)
 
-    expect(IntersectionObserverStub.instances).toHaveLength(1)
-    act(() => IntersectionObserverStub.instances[0].trigger(true))
-
+    expect(IntersectionObserverStub.instances).toHaveLength(0)
     expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
-    expect(screen.getByTestId('scene-poster')).toHaveAttribute('src', '/images/bikes-poster.jpg')
+    expect(screen.getByTestId('project-atmosphere-poster')).toHaveAttribute(
+      'src',
+      '/images/bikes-poster.jpg',
+    )
   })
 
   it('omits failed proof imagery without removing chapter content', () => {
