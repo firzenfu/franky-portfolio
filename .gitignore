@@ -3,6 +3,7 @@ dist/
 .tmp_resume/
 open-image-prompts/
 .superpowers/
+.worktrees/
 *.tsbuildinfo
 .env
 .env.*
