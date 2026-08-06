@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
@@ -49,5 +50,22 @@ describe('portfolio shell', () => {
     expect(screen.getAllByRole('link', { name: 'Open project' })).toHaveLength(3)
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
     expect(screen.queryByRole('img', { name: 'Next Experiment interface' })).not.toBeInTheDocument()
+  })
+
+  it('renders personal facts, capabilities, and experience', () => {
+    render(<App />)
+    expect(screen.getByText('NAIT Software Development')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Frontend Engineering' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Backend Systems' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'NAIT' })).toBeInTheDocument()
+  })
+
+  it('submits the accessible contact form through the mailto builder', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.type(screen.getByLabelText('Name'), 'Ada Wong')
+    await user.type(screen.getByLabelText('Email'), 'ada@example.com')
+    await user.type(screen.getByLabelText('Message'), 'A product role in Edmonton.')
+    expect(screen.getByRole('button', { name: 'Send message' })).toBeEnabled()
   })
 })
