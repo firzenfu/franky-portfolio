@@ -160,7 +160,7 @@ textarea:focus-visible {
   display: grid;
   min-height: 100dvh;
   overflow: hidden;
-  padding: clamp(138px, 17vh, 188px) clamp(20px, 5vw, 72px) clamp(54px, 8vh, 92px);
+  padding: 96px clamp(20px, 5vw, 72px) clamp(54px, 8vh, 92px);
   align-items: end;
 }
 
@@ -928,7 +928,7 @@ textarea:focus-visible {
     grid-template-columns: 1fr auto;
     height: auto;
     padding: 8px 8px 0 16px;
-    border-radius: 22px;
+    border-radius: var(--radius-media);
   }
 
   .site-brand {
