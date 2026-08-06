@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const STORAGE_KEY = 'franky-portfolio:background-music-muted'
 const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
+const CONTROL_CLICK_PAIR_TIMEOUT_MS = 1000
 
 type PlaybackState = 'idle' | 'playing' | 'muted' | 'unavailable'
 
@@ -23,12 +24,14 @@ function persistMuted(muted: boolean) {
 
 export function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const activeAudioRef = useRef<HTMLAudioElement>(null)
   const attemptedAutoPlayRef = useRef(false)
   const mountedRef = useRef(false)
   const operationRef = useRef(0)
   const activePlayOperationRef = useRef<number | null>(null)
   const pendingPlayRef = useRef(false)
+  const pairedControlClickCleanupRef = useRef<(() => void) | null>(null)
   const resumeAfterVisibilityRef = useRef(false)
   const stateRef = useRef<PlaybackState>(storedMuted() ? 'muted' : 'idle')
   const [state, setState] = useState<PlaybackState>(stateRef.current)
@@ -37,6 +40,36 @@ export function BackgroundMusic() {
     stateRef.current = next
     setState(next)
   }, [])
+
+  const clearPairedControlClick = useCallback(() => {
+    const cleanup = pairedControlClickCleanupRef.current
+    pairedControlClickCleanupRef.current = null
+    cleanup?.()
+  }, [])
+
+  const pairControlClick = useCallback(() => {
+    clearPairedControlClick()
+    const control = buttonRef.current
+    if (!control) return
+
+    let timeout: number | undefined
+    const consumeClick = (event: MouseEvent) => {
+      const pairedControlClick = control.contains(event.target as Node)
+      cleanup()
+      if (pairedControlClick) event.stopPropagation()
+    }
+    const cleanup = () => {
+      document.removeEventListener('click', consumeClick, true)
+      if (timeout !== undefined) window.clearTimeout(timeout)
+      if (pairedControlClickCleanupRef.current === cleanup) {
+        pairedControlClickCleanupRef.current = null
+      }
+    }
+
+    document.addEventListener('click', consumeClick, true)
+    timeout = window.setTimeout(cleanup, CONTROL_CLICK_PAIR_TIMEOUT_MS)
+    pairedControlClickCleanupRef.current = cleanup
+  }, [clearPairedControlClick])
 
   const invalidatePendingPlay = useCallback(() => {
     operationRef.current += 1
@@ -117,9 +150,10 @@ export function BackgroundMusic() {
     mountedRef.current = true
     return () => {
       mountedRef.current = false
+      clearPairedControlClick()
       invalidatePendingPlay()
     }
-  }, [invalidatePendingPlay])
+  }, [clearPairedControlClick, invalidatePendingPlay])
 
   useEffect(() => {
     if (state !== 'idle') return
@@ -127,6 +161,7 @@ export function BackgroundMusic() {
       if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return
       if (attemptedAutoPlayRef.current) return
       attemptedAutoPlayRef.current = true
+      if (buttonRef.current?.contains(event.target as Node)) pairControlClick()
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
       activate()
@@ -137,7 +172,7 @@ export function BackgroundMusic() {
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
     }
-  }, [activate, state])
+  }, [activate, pairControlClick, state])
 
   useEffect(() => {
     const handleVisibility = () => {
@@ -171,6 +206,7 @@ export function BackgroundMusic() {
         onError={handleMediaError}
       />
       <button
+        ref={buttonRef}
         className="music-control-button"
         type="button"
         aria-label={label}

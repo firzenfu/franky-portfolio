@@ -26,6 +26,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup()
+  vi.useRealTimers()
   vi.restoreAllMocks()
 })
 
@@ -210,6 +211,57 @@ describe('BackgroundMusic', () => {
     pending.resolve()
     await act(async () => undefined)
     expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('consumes the paired control click after its pointerdown playback has settled', async () => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.pointerDown(control)
+    pending.resolve()
+    await act(async () => undefined)
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(control)
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(pause).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(control)
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('cleans a control click pairing when no paired click occurs', async () => {
+    vi.useFakeTimers()
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.pointerDown(control)
+    pending.resolve()
+    await act(async () => undefined)
+    await act(async () => vi.advanceTimersByTime(1000))
+
+    fireEvent.click(control)
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('cleans the paired control click listener and timeout on unmount', () => {
+    vi.useFakeTimers()
+    const clearTimeout = vi.spyOn(window, 'clearTimeout')
+    const removeListener = vi.spyOn(document, 'removeEventListener')
+    const { unmount } = render(<BackgroundMusic />)
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Play background music' }))
+    unmount()
+
+    expect(clearTimeout).toHaveBeenCalled()
+    expect(removeListener.mock.calls.filter(([type]) => type === 'click').length).toBeGreaterThanOrEqual(1)
   })
 
   it('defaults to unmuted when local storage cannot be read', () => {
