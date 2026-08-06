@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { useReducedMotion } from 'framer-motion'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ContactScene } from './ContactScene'
@@ -67,6 +67,20 @@ describe('ContactScene', () => {
     render(<ContactScene />)
 
     expect(IntersectionObserverStub.instances).toHaveLength(0)
+    expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
+    expect(screen.getByTestId('contact-atmosphere-poster')).toBeInTheDocument()
+  })
+
+  it('does not retry a failed contact video after viewport re-entry', () => {
+    render(<ContactScene />)
+    act(() => IntersectionObserverStub.instances[0].trigger(true))
+
+    fireEvent.error(screen.getByTestId('scene-video'))
+    expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
+
+    act(() => IntersectionObserverStub.instances[0].trigger(false))
+    act(() => IntersectionObserverStub.instances[0].trigger(true))
+
     expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
     expect(screen.getByTestId('contact-atmosphere-poster')).toBeInTheDocument()
   })

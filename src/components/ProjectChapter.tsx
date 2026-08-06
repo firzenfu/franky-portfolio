@@ -15,6 +15,7 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
   const chapterRef = useRef<HTMLElement>(null)
   const reducedMotion = Boolean(useReducedMotion())
   const mediaActive = useViewportMedia(chapterRef, { disabled: reducedMotion })
+  const [mediaFailed, setMediaFailed] = useState(false)
   const [proofFailed, setProofFailed] = useState(false)
   const { scrollYProgress } = useScroll({
     target: chapterRef,
@@ -32,12 +33,13 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
       aria-labelledby={headingId}
       data-project-index={index}
     >
-      {mediaActive ? (
+      {mediaActive && !mediaFailed ? (
         <SceneVideo
           className="project-atmosphere"
           src={media.video}
           mobileSrc={media.mobileVideo}
           poster={media.poster}
+          onFailure={() => setMediaFailed(true)}
         />
       ) : (
         <ScenePoster
@@ -70,7 +72,7 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
             <span className="project-year">{project.year}</span>
           </div>
           <a className="project-link" href={project.href} target="_blank" rel="noreferrer">
-            Open project
+            View GitHub profile
           </a>
         </div>
         {hasProof && (

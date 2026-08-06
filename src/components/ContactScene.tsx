@@ -1,4 +1,4 @@
-import { useRef, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { sceneMedia } from '../data/media'
 import { useViewportMedia } from '../hooks/useViewportMedia'
@@ -9,6 +9,7 @@ export function ContactScene() {
   const contactRef = useRef<HTMLElement>(null)
   const reducedMotion = Boolean(useReducedMotion())
   const mediaActive = useViewportMedia(contactRef, { disabled: reducedMotion })
+  const [mediaFailed, setMediaFailed] = useState(false)
   const contactMedia = sceneMedia.contact
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -25,12 +26,13 @@ export function ContactScene() {
 
   return (
     <section ref={contactRef} className="contact-scene" id="contact">
-      {mediaActive ? (
+      {mediaActive && !mediaFailed ? (
         <SceneVideo
           className="contact-media"
           src={contactMedia.video}
           mobileSrc={contactMedia.mobileVideo}
           poster={contactMedia.poster}
+          onFailure={() => setMediaFailed(true)}
         />
       ) : (
         <ScenePoster

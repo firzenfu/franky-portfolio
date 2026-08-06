@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/images/franky-avatar.jpg" />
     <meta name="theme-color" content="#0d0f10" />
     <meta name="description" content="Franky Fu is a software developer building full-stack products with clear systems, considered interfaces, and practical AI workflows." />
     <meta property="og:title" content="Franky Fu | Software Developer" />
@@ -12,6 +13,27 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <style>
+        body { margin: 0; background: #0d0f10; color: #f2f1eb; font-family: system-ui, sans-serif; }
+        .noscript-fallback { box-sizing: border-box; display: grid; min-height: 100dvh; padding: clamp(32px, 8vw, 96px); align-content: center; gap: 24px; }
+        .noscript-fallback h1, .noscript-fallback p { max-width: 720px; margin: 0; }
+        .noscript-fallback h1 { font-size: clamp(3rem, 10vw, 7rem); letter-spacing: -0.06em; line-height: 0.95; }
+        .noscript-fallback p { color: #a8aaa4; font-size: 1.1rem; line-height: 1.7; }
+        .noscript-fallback nav { display: flex; flex-wrap: wrap; gap: 16px; }
+        .noscript-fallback a { border: 2px solid #d7ff43; border-radius: 999px; padding: 12px 18px; color: #d7ff43; font-weight: 700; text-decoration: none; }
+        .noscript-fallback a:focus { outline: 2px solid #d7ff43; outline-offset: 4px; }
+      </style>
+      <main class="noscript-fallback">
+        <h1>Franky Fu</h1>
+        <p>Software developer building full-stack products with clear systems, considered interfaces, and practical AI workflows.</p>
+        <nav aria-label="Contact Franky Fu">
+          <a href="https://github.com/firzenfu">GitHub profile</a>
+          <a href="mailto:firzenfu@gmail.com">Let's talk</a>
+        </nav>
+        <p>JavaScript is needed for the cinematic version of this portfolio.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

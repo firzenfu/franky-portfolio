@@ -83,7 +83,7 @@ describe('ProjectChapter', () => {
     expect(screen.getByRole('list', { name: 'Bikes R Us technology stack' })).toHaveTextContent(
       'Blazor ServerMudBlazorEF CoreSQL Server',
     )
-    expect(screen.getByRole('link', { name: 'Open project' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'View GitHub profile' })).toHaveAttribute(
       'href',
       'https://github.com/firzenfu/bikes-r-us',
     )
@@ -129,6 +129,20 @@ describe('ProjectChapter', () => {
     )
   })
 
+  it('does not retry a failed project video after viewport re-entry', () => {
+    render(<ProjectChapter project={project} media={media} index={0} />)
+    act(() => IntersectionObserverStub.instances[0].trigger(true))
+
+    fireEvent.error(screen.getByTestId('scene-video'))
+    expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
+
+    act(() => IntersectionObserverStub.instances[0].trigger(false))
+    act(() => IntersectionObserverStub.instances[0].trigger(true))
+
+    expect(screen.queryByTestId('scene-video')).not.toBeInTheDocument()
+    expect(screen.getByTestId('project-atmosphere-poster')).toBeInTheDocument()
+  })
+
   it('omits failed proof imagery without removing chapter content', () => {
     render(<ProjectChapter project={project} media={media} index={0} />)
 
@@ -137,7 +151,7 @@ describe('ProjectChapter', () => {
     expect(screen.queryByRole('img', { name: 'Bikes R Us interface' })).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Bikes R Us' })).toBeInTheDocument()
     expect(screen.getByText(project.problem)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Open project' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'View GitHub profile' })).toBeInTheDocument()
   })
 
   it('does not create a proof layer when no real screenshot exists', () => {

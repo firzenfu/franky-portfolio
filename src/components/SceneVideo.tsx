@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { selectMediaMode } from '../lib/media'
 
 export type SceneVideoProps = {
@@ -8,6 +9,7 @@ export type SceneVideoProps = {
   poster: string
   priority?: boolean
   className?: string
+  onFailure?: () => void
 }
 
 type ScenePosterProps = {
@@ -25,10 +27,16 @@ export function ScenePoster({ poster, className = '', testId = 'scene-poster' }:
   )
 }
 
-export function SceneVideo({ src, mobileSrc, poster, priority = false, className = '' }: SceneVideoProps) {
+export function SceneVideo({ src, mobileSrc, poster, priority = false, className = '', onFailure }: SceneVideoProps) {
   const reducedMotion = Boolean(useReducedMotion())
   const [failed, setFailed] = useState(false)
-  const mode = selectMediaMode({ reducedMotion, failed })
+  const isNarrow = useMediaQuery('(max-width: 767px)')
+  const mode = selectMediaMode({ reducedMotion, failed: failed || (isNarrow && !mobileSrc) })
+
+  function handleFailure() {
+    setFailed(true)
+    onFailure?.()
+  }
 
   if (mode === 'poster') {
     return <ScenePoster className={className} poster={poster} />
@@ -46,7 +54,7 @@ export function SceneVideo({ src, mobileSrc, poster, priority = false, className
         playsInline
         poster={poster}
         preload={priority ? 'auto' : 'none'}
-        onError={() => setFailed(true)}
+        onError={handleFailure}
       >
         {mobileSrc && <source src={mobileSrc} media="(max-width: 767px)" type="video/mp4" />}
         <source src={src} type="video/mp4" />

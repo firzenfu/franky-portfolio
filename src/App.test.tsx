@@ -60,7 +60,7 @@ describe('portfolio shell', () => {
     for (const title of ['Bikes R Us', 'Job Board', 'Next Experiment']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
-    expect(screen.getAllByRole('link', { name: 'Open project' })).toHaveLength(3)
+    expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(3)
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
     expect(screen.queryByRole('img', { name: 'Next Experiment interface' })).not.toBeInTheDocument()
   })
@@ -68,6 +68,7 @@ describe('portfolio shell', () => {
   it('renders personal facts, capabilities, and experience', () => {
     render(<App />)
     expect(screen.getByText('NAIT Software Development')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Illustrated avatar used by Franky Fu' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Frontend Engineering' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Backend Systems' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'NAIT' })).toBeInTheDocument()

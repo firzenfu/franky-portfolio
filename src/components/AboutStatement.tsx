@@ -30,7 +30,7 @@ export function AboutStatement() {
           </dl>
         </div>
         <figure className="about-portrait">
-          <img src="/images/franky-avatar.jpg" alt="Portrait of Franky Fu" loading="lazy" />
+          <img src="/images/franky-avatar.jpg" alt="Illustrated avatar used by Franky Fu" loading="lazy" />
         </figure>
       </motion.div>
     </section>
