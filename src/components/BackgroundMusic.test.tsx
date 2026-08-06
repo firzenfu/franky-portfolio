@@ -234,6 +234,46 @@ describe('BackgroundMusic', () => {
     expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
   })
 
+  it.each(['Tab', 'a'])('does not suppress a later control click after %s starts playback', async (key) => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.keyDown(control, { key })
+    pending.resolve()
+    await act(async () => undefined)
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(control)
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it.each([
+    ['Enter', 'Enter'],
+    ['Space', ' '],
+  ])('consumes the paired %s control click after playback has settled', async (_name, key) => {
+    const pending = deferredPlay()
+    play.mockImplementationOnce(() => pending.promise)
+    render(<BackgroundMusic />)
+    const control = screen.getByRole('button', { name: 'Play background music' })
+
+    fireEvent.keyDown(control, { key })
+    pending.resolve()
+    await act(async () => undefined)
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(control)
+    expect(play).toHaveBeenCalledTimes(1)
+    expect(pause).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Mute background music' })).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.click(control)
+    expect(pause).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
   it('cleans a control click pairing when no paired click occurs', async () => {
     vi.useFakeTimers()
     const pending = deferredPlay()

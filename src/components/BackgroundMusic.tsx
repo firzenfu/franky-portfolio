@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const STORAGE_KEY = 'franky-portfolio:background-music-muted'
 const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
+const BUTTON_ACTIVATION_KEYS = new Set(['Enter', ' '])
 const CONTROL_CLICK_PAIR_TIMEOUT_MS = 1000
 
 type PlaybackState = 'idle' | 'playing' | 'muted' | 'unavailable'
@@ -20,6 +21,12 @@ function persistMuted(muted: boolean) {
   } catch {
     // Storage can be unavailable in privacy-restricted browser contexts.
   }
+}
+
+function canPairControlClick(event: PointerEvent | KeyboardEvent, control: HTMLButtonElement) {
+  if (!control.contains(event.target as Node)) return false
+  if (event instanceof PointerEvent) return event.button === 0
+  return BUTTON_ACTIVATION_KEYS.has(event.key)
 }
 
 export function BackgroundMusic() {
@@ -161,7 +168,7 @@ export function BackgroundMusic() {
       if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return
       if (attemptedAutoPlayRef.current) return
       attemptedAutoPlayRef.current = true
-      if (buttonRef.current?.contains(event.target as Node)) pairControlClick()
+      if (buttonRef.current && canPairControlClick(event, buttonRef.current)) pairControlClick()
       document.removeEventListener('pointerdown', begin)
       document.removeEventListener('keydown', begin)
       activate()
