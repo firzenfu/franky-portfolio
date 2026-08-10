@@ -25,6 +25,7 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.985, 1, 0.985])
   const headingId = `${project.slug}-title`
   const hasProof = Boolean(project.image) && !proofFailed
+  const isInternalLink = project.href.startsWith('/')
 
   return (
     <article
@@ -71,8 +72,13 @@ export function ProjectChapter({ project, media, index }: ProjectChapterProps) {
             </ul>
             <span className="project-year">{project.year}</span>
           </div>
-          <a className="project-link" href={project.href} target="_blank" rel="noreferrer">
-            View GitHub profile
+          <a
+            className="project-link"
+            href={project.href}
+            target={isInternalLink ? undefined : '_blank'}
+            rel={isInternalLink ? undefined : 'noreferrer'}
+          >
+            {isInternalLink ? 'View case study' : 'View GitHub profile'}
           </a>
         </div>
         {hasProof && (
