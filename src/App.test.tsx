@@ -23,6 +23,7 @@ vi.stubGlobal('IntersectionObserver', ObserverStub)
 vi.stubGlobal('ResizeObserver', ObserverStub)
 
 beforeEach(() => {
+  window.history.replaceState({}, '', '/')
   vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined)
 })
@@ -71,12 +72,25 @@ describe('portfolio shell', () => {
 
   it('renders every project as a linked narrative chapter', () => {
     render(<App />)
-    for (const title of ['Bikes R Us', 'Job Board', 'Next Experiment']) {
+    for (const title of ['Bikes R Us', 'Job Board', 'AI Support']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
-    expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(3)
+    expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(2)
+    expect(screen.getByRole('link', { name: 'View case study' })).toHaveAttribute('href', '/projects/ai-support-assistant')
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
-    expect(screen.queryByRole('img', { name: 'Next Experiment interface' })).not.toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'AI Support interface' })).toBeInTheDocument()
+  })
+
+  it('renders the AI support case study at its project path', () => {
+    window.history.replaceState({}, '', '/projects/ai-support-assistant')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'Resolve IT issues faster.' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'AI Support Assistant conversation and ticket interface' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Explore the code' })).toHaveAttribute(
+      'href',
+      'https://github.com/firzenfu/ai-support-assistant',
+    )
   })
 
   it('renders personal facts, capabilities, and experience', () => {

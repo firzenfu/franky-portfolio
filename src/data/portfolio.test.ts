@@ -6,7 +6,7 @@ describe('portfolio data', () => {
     expect(projects).toHaveLength(3)
     for (const project of projects) {
       expect(project.slug).toMatch(/^[a-z0-9-]+$/)
-      expect(project.href).toMatch(/^https:\/\//)
+      expect(project.href).toMatch(/^(https:\/\/|\/)/)
       expect(project.stack.length).toBeGreaterThanOrEqual(3)
       expect(project.problem.length).toBeGreaterThan(20)
       expect(project.solution.length).toBeGreaterThan(20)
