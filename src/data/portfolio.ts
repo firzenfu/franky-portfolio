@@ -49,14 +49,15 @@ export const projects: Project[] = [
     solution: 'Created a Next.js recruitment application with Prisma, REST endpoints, and Jest coverage for core flows.',
   },
   {
-    slug: 'next-experiment',
-    title: 'Next Experiment',
-    subtitle: 'AI-native Product',
-    year: 'Soon',
-    href: 'https://github.com/firzenfu',
-    stack: ['AI Workflow', 'TypeScript', 'Product Design'],
-    problem: 'Exploring how AI-native workflows can move from isolated prompts into a coherent product experience.',
-    solution: 'Developing a TypeScript experiment that treats AI workflow and product design as one connected system.',
+    slug: 'ai-support-assistant',
+    title: 'AI Support',
+    subtitle: 'Intelligent IT Help Desk',
+    year: '2026',
+    image: '/images/ai-support-assistant.png',
+    href: '/projects/ai-support-assistant',
+    stack: ['Next.js', 'Python', 'OpenAI API', 'SQLite'],
+    problem: 'Technical support often starts with scattered symptoms, repeated questions, and no clear path from conversation to action.',
+    solution: 'Built an AI-assisted help desk that guides troubleshooting, preserves conversation context, and turns unresolved issues into trackable tickets.',
   },
 ]
 

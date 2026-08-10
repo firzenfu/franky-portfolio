@@ -6,12 +6,17 @@ import { ExperienceTimeline } from './components/ExperienceTimeline'
 import { HeroScene } from './components/HeroScene'
 import { ProjectChapter } from './components/ProjectChapter'
 import { SiteNav } from './components/SiteNav'
+import { AiSupportCaseStudy } from './components/AiSupportCaseStudy'
 import { sceneMedia, type SceneKey } from './data/media'
 import { projects } from './data/portfolio'
 
 const projectMedia: SceneKey[] = ['bikes', 'jobs', 'experiment']
 
 function App() {
+  if (window.location.pathname === '/projects/ai-support-assistant') {
+    return <AiSupportCaseStudy />
+  }
+
   return (
     <>
       <SiteNav />
