@@ -87,9 +87,9 @@ describe('portfolio shell', () => {
 
     expect(screen.getByRole('heading', { name: 'Resolve IT issues faster.' })).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'AI Support Assistant conversation and ticket interface' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Explore the code' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Try live demo' })).toHaveAttribute(
       'href',
-      'https://github.com/firzenfu/ai-support-assistant',
+      'https://ai-support-assistant-demo.vercel.app',
     )
   })
 

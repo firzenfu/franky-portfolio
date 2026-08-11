@@ -22,8 +22,8 @@ export function AiSupportCaseStudy() {
           <p className="case-kicker">AI Support Assistant</p>
           <h1>Resolve IT issues faster.</h1>
           <p className="case-lede">A conversational help desk that troubleshoots everyday IT problems and turns unresolved issues into trackable support tickets.</p>
-          <a className="button button-primary" href="https://github.com/firzenfu/ai-support-assistant" target="_blank" rel="noreferrer">
-            Explore the code
+          <a className="button button-primary" href="https://ai-support-assistant-demo.vercel.app" target="_blank" rel="noreferrer">
+            Try live demo
           </a>
         </motion.div>
 
@@ -67,7 +67,7 @@ export function AiSupportCaseStudy() {
 
       <footer className="case-footer">
         <a href="/">Back to selected work</a>
-        <a href="https://github.com/firzenfu/ai-support-assistant" target="_blank" rel="noreferrer">GitHub repository</a>
+        <a href="https://ai-support-assistant-demo.vercel.app" target="_blank" rel="noreferrer">Open live demo</a>
       </footer>
     </main>
   )
