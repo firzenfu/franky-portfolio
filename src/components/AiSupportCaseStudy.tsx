@@ -11,7 +11,7 @@ export function AiSupportCaseStudy() {
   return (
     <main className="case-study">
       <nav className="case-nav" aria-label="Case study navigation">
-        <a href="/">Franky Fu</a>
+        <a href="/">Home</a>
         <a href="https://github.com/firzenfu/ai-support-assistant" target="_blank" rel="noreferrer">
           View repository
         </a>
