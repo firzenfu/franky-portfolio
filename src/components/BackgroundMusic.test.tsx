@@ -392,6 +392,15 @@ describe('BackgroundMusic', () => {
     expect(play).toHaveBeenCalledTimes(1)
   })
 
+  it('does not start playback for a modified keyboard shortcut', () => {
+    render(<BackgroundMusic />)
+
+    fireEvent.keyDown(document, { key: 'k', ctrlKey: true })
+
+    expect(play).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
   it('keeps successful playback and mute state when local storage cannot be written', async () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new DOMException('Storage unavailable')
@@ -422,5 +431,16 @@ describe('BackgroundMusic', () => {
     expect(removeListener.mock.calls.filter(([type]) => type === 'pointerdown').length).toBeGreaterThanOrEqual(1)
     expect(removeListener.mock.calls.filter(([type]) => type === 'keydown').length).toBeGreaterThanOrEqual(1)
     expect(removeListener.mock.calls.filter(([type]) => type === 'visibilitychange').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('yields to foreground media with sound', async () => {
+    render(<BackgroundMusic />)
+    fireEvent.pointerDown(document.body)
+    await screen.findByRole('button', { name: 'Mute background music' })
+
+    window.dispatchEvent(new Event('franky-portfolio:foreground-audio'))
+
+    expect(pause).toHaveBeenCalled()
+    expect(await screen.findByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false')
   })
 })

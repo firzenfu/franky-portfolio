@@ -40,6 +40,7 @@ describe('portfolio shell', () => {
     const { container } = render(<App />)
 
     expect(screen.getByRole('button', { name: 'Play background music' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open command menu' })).toBeInTheDocument()
     expect(container.querySelectorAll('audio[src="/audio/title-arcana-ver2.mp3"]')).toHaveLength(1)
   })
 
@@ -72,13 +73,18 @@ describe('portfolio shell', () => {
 
   it('renders every project as a linked narrative chapter', () => {
     render(<App />)
-    for (const title of ['Bikes R Us', 'Job Board', 'AI Support']) {
+    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', 'Monica Everett']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
+    expect(screen.getByTitle('Monica Everett cinematic anime edit')).toHaveAttribute(
+      'src',
+      '/videos/monica-everett-cinematic-edit.mp4',
+    )
     expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(2)
     expect(screen.getByRole('link', { name: 'View case study' })).toHaveAttribute('href', '/projects/ai-support-assistant')
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'AI Support interface' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Try the support flow.' })).toBeInTheDocument()
   })
 
   it('renders the AI support case study at its project path', () => {
@@ -91,6 +97,7 @@ describe('portfolio shell', () => {
       'href',
       'https://ai-support-assistant-demo.vercel.app',
     )
+    expect(screen.getByRole('heading', { name: 'Follow one request.' })).toBeInTheDocument()
   })
 
   it('renders personal facts, capabilities, and experience', () => {
