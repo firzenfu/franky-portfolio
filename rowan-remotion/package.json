@@ -6,6 +6,8 @@
   "scripts": {
     "studio": "remotion studio --no-open",
     "render": "remotion render RowanMagicAwakening out/rowan-magic-awakening.mp4 --codec=h264",
+    "render:franky": "remotion render FrankyArcanaEdit out/franky-arcana-edit.mp4 --codec=h264 --crf=18",
+    "audio:franky": "node scripts/generate-franky-audio.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest"
   },
