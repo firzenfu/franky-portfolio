@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { ArchitectureExplorer } from './ArchitectureExplorer'
 
 const stack = ['Next.js', 'TypeScript', 'Python', 'FastAPI', 'OpenAI API', 'SQLite']
 
@@ -54,6 +55,8 @@ export function AiSupportCaseStudy() {
           <p>The assistant guides the conversation through practical troubleshooting, keeps earlier messages visible, and creates support tickets when a human follow-up is the right next step.</p>
         </article>
       </motion.section>
+
+      <ArchitectureExplorer />
 
       <motion.section className="case-build" {...reveal}>
         <div className="case-build-heading">

@@ -4,6 +4,7 @@ const STORAGE_KEY = 'franky-portfolio:background-music-muted'
 const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
 const BUTTON_ACTIVATION_KEYS = new Set(['Enter', ' '])
 const CONTROL_CLICK_PAIR_TIMEOUT_MS = 1000
+const FOREGROUND_AUDIO_EVENT = 'franky-portfolio:foreground-audio'
 
 type PlaybackState = 'idle' | 'playing' | 'muted' | 'unavailable'
 
@@ -191,9 +192,17 @@ export function BackgroundMusic() {
   }, [clearPairedControlClick, invalidatePendingPlay])
 
   useEffect(() => {
+    window.addEventListener(FOREGROUND_AUDIO_EVENT, mute)
+    return () => window.removeEventListener(FOREGROUND_AUDIO_EVENT, mute)
+  }, [mute])
+
+  useEffect(() => {
     if (state !== 'idle') return
     const begin = (event: PointerEvent | KeyboardEvent) => {
-      if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return
+      if (
+        event instanceof KeyboardEvent &&
+        (MODIFIER_KEYS.has(event.key) || event.metaKey || event.ctrlKey || event.altKey)
+      ) return
       if (attemptedAutoPlayRef.current) return
       attemptedAutoPlayRef.current = true
       if (buttonRef.current && canPairControlClick(event, buttonRef.current)) pairControlClick(event)

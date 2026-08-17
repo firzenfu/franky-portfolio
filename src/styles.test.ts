@@ -21,7 +21,7 @@ describe('responsive fixed-control clearance', () => {
     const mobileLayoutStyles = styles.match(
       /@media \(max-width: 767px\) \{([\s\S]*?)\r?\n\}\r?\n\r?\n@media \(prefers-reduced-transparency: reduce\)/,
     )?.[1]
-    const mobileControlStart = styles.lastIndexOf('@media (max-width: 767px)')
+    const mobileControlStart = styles.indexOf('@media (max-width: 767px)', styles.indexOf('.music-control'))
     const mobileControlEnd = styles.indexOf('@media (prefers-reduced-motion: reduce)', mobileControlStart)
     const mobileControlStyles = styles.slice(mobileControlStart, mobileControlEnd)
     const railRule = /\.contact-scene-layout,\s*\.site-footer\s*\{\s*padding-right:\s*42px;\s*\}/
