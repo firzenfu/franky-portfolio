@@ -76,7 +76,7 @@ describe('portfolio shell', () => {
     for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '术式边界', 'Monica Everett']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
-    expect(screen.getByTitle('术式边界 concept trailer')).toHaveAttribute(
+    expect(screen.getByTitle('术式边界 Baijin ultimate preview')).toHaveAttribute(
       'src',
       '/videos/spell-boundary-trailer.mp4',
     )

@@ -56,14 +56,14 @@ describe('MotionProjectChapter', () => {
     window.removeEventListener('franky-portfolio:foreground-audio', foregroundAudio)
   })
 
-  it('renders the spell boundary trailer with its own media and duration', () => {
+  it('renders the spell boundary game preview with its own media and duration', () => {
     const { container } = render(<MotionProjectChapter project={spellBoundaryProject} />)
     const video = container.querySelector('video')
 
     expect(screen.getByRole('heading', { name: '术式边界' })).toBeInTheDocument()
     expect(video).toHaveAttribute('src', '/videos/spell-boundary-trailer.mp4')
-    expect(video).toHaveAttribute('poster', '/images/spell-boundary-poster.jpg')
-    expect(screen.getByRole('slider', { name: 'Film progress' })).toHaveAttribute('max', '10.05')
-    expect(screen.getByText('00:00 / 00:10')).toBeInTheDocument()
+    expect(video).toHaveAttribute('poster', '/images/spell-boundary-battle.png')
+    expect(screen.getByRole('slider', { name: 'Film progress' })).toHaveAttribute('max', '5.09')
+    expect(screen.getByText('00:00 / 00:05')).toBeInTheDocument()
   })
 })
