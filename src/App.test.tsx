@@ -73,9 +73,13 @@ describe('portfolio shell', () => {
 
   it('renders every project as a linked narrative chapter', () => {
     render(<App />)
-    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', 'Monica Everett']) {
+    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '术式边界', 'Monica Everett']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
+    expect(screen.getByTitle('术式边界 concept trailer')).toHaveAttribute(
+      'src',
+      '/videos/spell-boundary-trailer.mp4',
+    )
     expect(screen.getByTitle('Monica Everett cinematic anime edit')).toHaveAttribute(
       'src',
       '/videos/monica-everett-cinematic-edit.mp4',

@@ -576,7 +576,7 @@ textarea:focus-visible {
   inset: -12%;
   background:
     linear-gradient(90deg, rgb(13 15 16 / 98%) 0%, rgb(13 15 16 / 80%) 42%, rgb(13 15 16 / 52%) 100%),
-    url('/images/monica-everett-poster.jpg') center / cover;
+    var(--motion-project-poster) center / cover;
   content: '';
   filter: blur(28px) saturate(0.58);
   opacity: 0.28;
@@ -1117,6 +1117,27 @@ textarea:focus-visible {
 
   .motion-project-stage {
     width: 100%;
+  }
+
+  .motion-project-control-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .motion-project-control-row button {
+    min-height: 34px;
+    padding-inline: 12px;
+    font-size: 0.62rem;
+  }
+
+  .motion-project-control-row span {
+    width: 100%;
+    margin-left: 0;
+    text-align: right;
+  }
+
+  .motion-project-timeline {
+    margin-top: 7px;
   }
 
   .capability-index,
@@ -2040,6 +2061,168 @@ textarea:focus-visible {
   cursor: default;
 }
 
+.ai-demo-ticket {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.ai-demo-ticket-header {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.ai-demo-ticket-header span,
+.ai-demo-ticket-summary dt,
+.ai-demo-ticket-context h4 {
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-demo-ticket-header h3 {
+  margin: 8px 0 0;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.ai-demo-ticket-header p {
+  max-width: 28ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.ai-demo-ticket-summary {
+  display: grid;
+  grid-template-columns: 1.15fr 0.7fr 1.15fr;
+  margin: 24px 0 0;
+  border-block: 1px solid var(--line);
+}
+
+.ai-demo-ticket-summary div {
+  min-width: 0;
+  padding: 18px 20px 18px 0;
+}
+
+.ai-demo-ticket-summary div + div {
+  padding-left: 20px;
+  border-left: 1px solid var(--line);
+}
+
+.ai-demo-ticket-summary dd {
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.ai-demo-ticket-context {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 58px);
+  padding: 28px 0;
+}
+
+.ai-demo-ticket-context h4 {
+  margin: 0;
+}
+
+.ai-demo-ticket-context h4:not(:first-child) {
+  margin-top: 24px;
+}
+
+.ai-demo-ticket-context p,
+.ai-demo-ticket-context li {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.ai-demo-ticket-context p {
+  margin: 9px 0 0;
+}
+
+.ai-demo-ticket-context ul {
+  display: grid;
+  gap: 9px;
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.ai-demo-ticket-context li::marker {
+  color: var(--accent);
+}
+
+.ai-demo-ticket-footer {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.ai-demo-ticket-footer > p {
+  max-width: 40ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.ai-demo-ticket-actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.ai-demo-ticket-actions button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--surface);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease, opacity 160ms ease;
+}
+
+.ai-demo-ticket-actions button.is-secondary {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+
+.ai-demo-ticket-actions button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.ai-demo-ticket-actions button.is-secondary:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.ai-demo-ticket-actions button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+.ai-demo-ticket-actions button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
 .case-architecture {
   width: min(1280px, calc(100% - 40px));
   margin: 0 auto;
@@ -2241,6 +2424,39 @@ textarea:focus-visible {
   .ai-demo-outcome {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .ai-demo-ticket-header,
+  .ai-demo-ticket-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ai-demo-ticket-header p {
+    text-align: left;
+  }
+
+  .ai-demo-ticket-summary,
+  .ai-demo-ticket-context {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-demo-ticket-summary div {
+    padding: 15px 0;
+  }
+
+  .ai-demo-ticket-summary div + div {
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .ai-demo-ticket-actions {
+    width: 100%;
+  }
+
+  .ai-demo-ticket-actions button {
+    flex: 1;
   }
 
   .case-architecture {

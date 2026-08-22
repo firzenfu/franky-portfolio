@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { spellBoundaryProject } from '../data/motionProjects'
 import { MotionProjectChapter } from './MotionProjectChapter'
 
 class ObserverStub {
@@ -53,5 +54,16 @@ describe('MotionProjectChapter', () => {
     expect(screen.getByText('00:12 / 00:20')).toBeInTheDocument()
 
     window.removeEventListener('franky-portfolio:foreground-audio', foregroundAudio)
+  })
+
+  it('renders the spell boundary trailer with its own media and duration', () => {
+    const { container } = render(<MotionProjectChapter project={spellBoundaryProject} />)
+    const video = container.querySelector('video')
+
+    expect(screen.getByRole('heading', { name: '术式边界' })).toBeInTheDocument()
+    expect(video).toHaveAttribute('src', '/videos/spell-boundary-trailer.mp4')
+    expect(video).toHaveAttribute('poster', '/images/spell-boundary-poster.jpg')
+    expect(screen.getByRole('slider', { name: 'Film progress' })).toHaveAttribute('max', '10.05')
+    expect(screen.getByText('00:00 / 00:10')).toBeInTheDocument()
   })
 })

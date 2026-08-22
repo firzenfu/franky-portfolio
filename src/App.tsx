@@ -11,6 +11,7 @@ import { SiteNav } from './components/SiteNav'
 import { AiSupportCaseStudy } from './components/AiSupportCaseStudy'
 import { CommandPalette } from './components/CommandPalette'
 import { sceneMedia, type SceneKey } from './data/media'
+import { spellBoundaryProject } from './data/motionProjects'
 import { projects } from './data/portfolio'
 
 const projectMedia: SceneKey[] = ['bikes', 'jobs', 'experiment']
@@ -46,6 +47,7 @@ function App() {
                 index={index}
               />
             ))}
+            <MotionProjectChapter project={spellBoundaryProject} />
             <MotionProjectChapter />
           </div>
           <AiSupportDemo />

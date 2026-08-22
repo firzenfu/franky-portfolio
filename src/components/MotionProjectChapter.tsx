@@ -1,14 +1,18 @@
 import { useRef, useState, type CSSProperties } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { monicaEverettProject, type MotionProject } from '../data/motionProjects'
 
-const FILM_DURATION = 20.06
 const FOREGROUND_AUDIO_EVENT = 'franky-portfolio:foreground-audio'
 
 function formatTime(seconds: number) {
   return `00:${Math.floor(seconds).toString().padStart(2, '0')}`
 }
 
-export function MotionProjectChapter() {
+export type MotionProjectChapterProps = {
+  project?: MotionProject
+}
+
+export function MotionProjectChapter({ project = monicaEverettProject }: MotionProjectChapterProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const reducedMotion = Boolean(useReducedMotion())
   const [playing, setPlaying] = useState(false)
@@ -45,8 +49,16 @@ export function MotionProjectChapter() {
     setCurrentTime(nextTime)
   }
 
+  const durationLabel = formatTime(project.duration)
+  const headingId = `${project.id}-title`
+
   return (
-    <article className="motion-project" id="monica-everett" aria-labelledby="monica-everett-title">
+    <article
+      className="motion-project"
+      id={project.id}
+      aria-labelledby={headingId}
+      style={{ '--motion-project-poster': `url("${project.poster}")` } as CSSProperties}
+    >
       <div className="motion-project-shell">
         <motion.div
           className="motion-project-copy"
@@ -55,27 +67,24 @@ export function MotionProjectChapter() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="motion-project-kicker">Motion direction / 00:20 / 2026</p>
-          <h3 id="monica-everett-title">Monica Everett</h3>
-          <p className="project-subtitle">Cinematic anime edit</p>
+          <p className="motion-project-kicker">{project.kicker}</p>
+          <h3 id={headingId}>{project.title}</h3>
+          <p className="project-subtitle">{project.subtitle}</p>
           <dl className="project-narrative">
             <div>
               <dt>Brief</dt>
-              <dd>A compact character film that moves from quiet restraint to magical impact without losing visual continuity.</dd>
+              <dd>{project.brief}</dd>
             </div>
             <div>
               <dt>Craft</dt>
-              <dd>Close framing, rhythmic reveals, color-led escalation, and sound shape a complete arc in twenty seconds.</dd>
+              <dd>{project.craft}</dd>
             </div>
           </dl>
           <div className="project-meta">
-            <ul className="project-stack" aria-label="Monica Everett creative disciplines">
-              <li>AI Direction</li>
-              <li>Editing</li>
-              <li>Sound Design</li>
-              <li>Visual Storytelling</li>
+            <ul className="project-stack" aria-label={`${project.title} creative disciplines`}>
+              {project.disciplines.map((discipline) => <li key={discipline}>{discipline}</li>)}
             </ul>
-            <span className="project-year">2026</span>
+            <span className="project-year">{project.year}</span>
           </div>
         </motion.div>
 
@@ -89,14 +98,14 @@ export function MotionProjectChapter() {
           {!mediaFailed ? (
             <video
               ref={videoRef}
-              src="/videos/monica-everett-cinematic-edit.mp4"
-              poster="/images/monica-everett-poster.jpg"
+              src={project.video}
+              poster={project.poster}
               preload="metadata"
               autoPlay={!reducedMotion}
               muted
               loop
               playsInline
-              title="Monica Everett cinematic anime edit"
+              title={project.videoTitle}
               onPlay={() => setPlaying(true)}
               onPause={() => setPlaying(false)}
               onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
@@ -108,7 +117,7 @@ export function MotionProjectChapter() {
               Your browser does not support embedded video.
             </video>
           ) : (
-            <img src="/images/monica-everett-poster.jpg" alt="Monica Everett anime character in a cinematic scene" />
+            <img src={project.poster} alt={project.posterAlt} />
           )}
           <div className="motion-project-vignette" aria-hidden="true" />
           <figcaption className="motion-project-controls">
@@ -116,7 +125,7 @@ export function MotionProjectChapter() {
               <button
                 type="button"
                 disabled={mediaFailed}
-                aria-label={playing ? 'Pause Monica Everett film' : 'Play Monica Everett film'}
+                aria-label={playing ? `Pause ${project.title} film` : `Play ${project.title} film`}
                 onPointerDown={(event) => event.stopPropagation()}
                 onClick={togglePlayback}
               >
@@ -125,28 +134,28 @@ export function MotionProjectChapter() {
               <button
                 type="button"
                 disabled={mediaFailed}
-                aria-label={muted ? 'Turn Monica Everett film sound on' : 'Mute Monica Everett film'}
+                aria-label={muted ? `Turn ${project.title} film sound on` : `Mute ${project.title} film`}
                 aria-pressed={!muted}
                 onPointerDown={(event) => event.stopPropagation()}
                 onClick={toggleSound}
               >
                 {muted ? 'Hear film' : 'Mute film'}
               </button>
-              <span aria-live="off">{formatTime(currentTime)} / 00:20</span>
+              <span aria-live="off">{formatTime(currentTime)} / {durationLabel}</span>
             </div>
             <label className="motion-project-timeline">
               <span className="sr-only">Film progress</span>
               <input
                 type="range"
                 min="0"
-                max={FILM_DURATION}
+                max={project.duration}
                 step="0.01"
-                value={Math.min(currentTime, FILM_DURATION)}
+                value={Math.min(currentTime, project.duration)}
                 disabled={mediaFailed}
                 aria-label="Film progress"
                 onPointerDown={(event) => event.stopPropagation()}
                 onChange={(event) => seek(Number(event.currentTarget.value))}
-                style={{ '--film-progress': `${Math.min(currentTime / FILM_DURATION, 1) * 100}%` } as CSSProperties}
+                style={{ '--film-progress': `${Math.min(currentTime / project.duration, 1) * 100}%` } as CSSProperties}
               />
             </label>
           </figcaption>
