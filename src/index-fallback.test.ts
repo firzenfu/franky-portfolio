@@ -16,10 +16,12 @@ describe('index fallback', () => {
     expect(root?.querySelector('header nav')).not.toBeNull()
     expect(root?.querySelector('main')).not.toBeNull()
 
-    for (const id of ['top', 'about', 'work', 'skills', 'contact']) {
+    for (const id of ['top', 'about', 'skills', 'contact']) {
       expect(root?.querySelectorAll(`#${id}`)).toHaveLength(1)
       expect(root?.querySelector(`a[href="#${id}"]`)).not.toBeNull()
     }
+    expect(root?.querySelectorAll('#work')).toHaveLength(1)
+    expect(root?.querySelector('a[href="/works"]')).not.toBeNull()
 
     const elementsWithIds = (root?.querySelectorAll('[id]') ?? []) as NodeListOf<Element>
     const ids = Array.from(elementsWithIds, (element) => element.id)

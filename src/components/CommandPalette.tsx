@@ -16,9 +16,10 @@ function commands(): Command[] {
   return [
     { label: 'Home', description: 'Return to the opening scene', href: homeHref('#top'), group: 'Navigate' },
     { label: 'About', description: 'Read the short introduction', href: homeHref('#about'), group: 'Navigate' },
-    { label: 'Selected work', description: 'Jump to project chapters', href: homeHref('#work'), group: 'Navigate' },
+    { label: 'Works', description: 'Browse the complete project archive', href: '/works', group: 'Navigate' },
     { label: 'Skills', description: 'Explore capabilities and tools', href: homeHref('#skills'), group: 'Navigate' },
     { label: 'AI Support case study', description: 'Open the full product story', href: '/projects/ai-support-assistant', group: 'Projects' },
+    { label: '术式边界', description: 'View the original turn-based squad RPG', href: homeHref('#spell-boundary'), group: 'Projects' },
     { label: 'Monica Everett film', description: 'Watch the cinematic motion edit', href: homeHref('#monica-everett'), group: 'Projects' },
     { label: 'GitHub', description: 'View repositories and current work', href: 'https://github.com/firzenfu', group: 'Connect', external: true },
     { label: 'Contact', description: 'Start a conversation with Franky', href: homeHref('#contact'), group: 'Connect' },

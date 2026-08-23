@@ -48,7 +48,7 @@ describe('portfolio shell', () => {
     const { container } = render(<App />)
 
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about')
-    expect(screen.getByRole('link', { name: 'Works' })).toHaveAttribute('href', '#work')
+    expect(screen.getByRole('link', { name: 'Works' })).toHaveAttribute('href', '/works')
     expect(screen.getByRole('link', { name: 'Skills' })).toHaveAttribute('href', '#skills')
     expect(screen.getByRole('link', { name: "Let's talk" })).toHaveAttribute('href', '#contact')
 
@@ -71,24 +71,43 @@ describe('portfolio shell', () => {
     expect(lines.map((line) => line.textContent)).toEqual(['Software with a', 'point of view.'])
   })
 
-  it('renders every project as a linked narrative chapter', () => {
+  it('keeps the homepage focused on three selected projects', () => {
     render(<App />)
-    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '术式边界', 'Monica Everett']) {
+    for (const title of ['Bikes R Us', 'AI Support', '术式边界']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
+    expect(screen.queryByRole('heading', { name: 'Job Board' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Monica Everett' })).not.toBeInTheDocument()
     expect(screen.getByTitle('术式边界 Baijin ultimate preview')).toHaveAttribute(
       'src',
       '/videos/spell-boundary-trailer.mp4',
     )
-    expect(screen.getByTitle('Monica Everett cinematic anime edit')).toHaveAttribute(
-      'src',
-      '/videos/monica-everett-cinematic-edit.mp4',
-    )
-    expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(2)
+    expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(1)
     expect(screen.getByRole('link', { name: 'View case study' })).toHaveAttribute('href', '/projects/ai-support-assistant')
+    expect(screen.getByRole('link', { name: 'View all works' })).toHaveAttribute('href', '/works')
     expect(screen.getByText(/sales and returns workflows needed/i)).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'AI Support interface' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Try the support flow.' })).toBeInTheDocument()
+  })
+
+  it('renders the complete filterable archive at the works path', async () => {
+    const user = userEvent.setup()
+    window.history.replaceState({}, '', '/works')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'Built across product, AI, games, and motion.' })).toBeInTheDocument()
+    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '术式边界', 'Monica Everett']) {
+      expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
+    }
+    expect(screen.getByRole('link', { name: 'View Monica Everett' })).toHaveAttribute(
+      'href',
+      '/videos/monica-everett-cinematic-edit.mp4',
+    )
+    expect(screen.getByRole('link', { name: 'Works' })).toHaveAttribute('aria-current', 'page')
+
+    await user.click(screen.getByRole('button', { name: 'Game' }))
+    expect(screen.getByRole('heading', { name: '术式边界' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Bikes R Us' })).not.toBeInTheDocument()
   })
 
   it('renders the AI support case study at its project path', () => {

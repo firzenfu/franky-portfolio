@@ -10,11 +10,15 @@ import { MotionProjectChapter } from './components/MotionProjectChapter'
 import { SiteNav } from './components/SiteNav'
 import { AiSupportCaseStudy } from './components/AiSupportCaseStudy'
 import { CommandPalette } from './components/CommandPalette'
+import { WorksIndex } from './components/WorksIndex'
 import { sceneMedia, type SceneKey } from './data/media'
 import { spellBoundaryProject } from './data/motionProjects'
 import { projects } from './data/portfolio'
 
-const projectMedia: SceneKey[] = ['bikes', 'jobs', 'experiment']
+const projectMedia: Partial<Record<string, SceneKey>> = {
+  'bikes-r-us': 'bikes',
+  'ai-support-assistant': 'experiment',
+}
 
 function App() {
   if (window.location.pathname === '/projects/ai-support-assistant') {
@@ -25,6 +29,21 @@ function App() {
       </>
     )
   }
+
+  if (window.location.pathname === '/works') {
+    return (
+      <>
+        <SiteNav />
+        <BackgroundMusic />
+        <WorksIndex />
+        <CommandPalette />
+      </>
+    )
+  }
+
+  const featuredProjects = projects.filter((project) => (
+    project.slug === 'bikes-r-us' || project.slug === 'ai-support-assistant'
+  ))
 
   return (
     <>
@@ -39,16 +58,19 @@ function App() {
             <h2>Work that solves, not just decorates.</h2>
           </div>
           <div className="project-list">
-            {projects.map((project, index) => (
+            {featuredProjects.map((project, index) => (
               <ProjectChapter
                 key={project.slug}
                 project={project}
-                media={sceneMedia[projectMedia[index]]}
+                media={sceneMedia[projectMedia[project.slug] ?? 'experiment']}
                 index={index}
               />
             ))}
             <MotionProjectChapter project={spellBoundaryProject} />
-            <MotionProjectChapter />
+          </div>
+          <div className="work-index-cta">
+            <p>Products, experiments, games, and motion work live in one growing archive.</p>
+            <a className="button button-primary" href="/works">View all works</a>
           </div>
           <AiSupportDemo />
         </section>
