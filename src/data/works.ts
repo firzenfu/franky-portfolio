@@ -22,6 +22,19 @@ const [bikes, jobBoard, aiSupport] = projects
 
 export const workItems: WorkItem[] = [
   {
+    id: 'star-card',
+    title: '星澜',
+    subtitle: 'Interactive holographic art card',
+    year: '2026',
+    category: 'Motion',
+    image: '/images/star-card-preview.png',
+    imageAlt: '星澜 layered art card in the White Atelier interactive viewer',
+    href: '/star-card/',
+    summary: 'Explore layered artwork through rotation, depth, and shifting pearl, silver, and gold finishes.',
+    tools: ['Three.js', 'WebGL', 'Interactive 3D'],
+    actionLabel: 'Explore card',
+  },
+  {
     id: aiSupport.slug,
     title: aiSupport.title,
     subtitle: aiSupport.subtitle,
