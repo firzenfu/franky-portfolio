@@ -5,14 +5,14 @@
   font-display: swap;
 }
 :root {
-  color-scheme: light;
-  --paper: #fafafa;
-  --ink: #242625;
-  --muted: #666d65;
-  --line: #e4e6e3;
-  --accent: #a34829;
-  --focus: #42645b;
-  --control: #f0f1ee;
+  color-scheme: dark;
+  --paper: #0d0f10;
+  --ink: #f2f1eb;
+  --muted: #a8aaa4;
+  --line: rgb(242 241 235 / 16%);
+  --accent: #d7ff43;
+  --focus: #d7ff43;
+  --control: #171a1b;
   font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -60,8 +60,8 @@ input:focus-visible {
   outline-offset: 5px;
 }
 ::selection {
-  background: #e6ddd7;
-  color: #242625;
+  background: var(--accent);
+  color: var(--paper);
 }
 button,
 a {
@@ -145,19 +145,19 @@ button svg {
     color 0.18s;
 }
 .icon-button:hover:not(:disabled) {
-  background: #e9ebe6;
+  background: var(--control);
 }
 .icon-button[aria-pressed="true"] {
   color: var(--accent);
-  background: #f1eae5;
+  background: rgb(215 255 67 / 12%);
 }
 .save-button {
-  background: var(--ink);
-  color: #fff;
+  background: var(--accent);
+  color: var(--paper);
 }
 .save-button:hover:not(:disabled) {
-  background: #474a44;
-  color: white;
+  background: #e3ff7c;
+  color: var(--paper);
 }
 .gallery {
   height: calc(100svh - 278px);
@@ -382,7 +382,7 @@ button svg {
   left: calc(50% + 68px);
   width: 266px;
   padding: 20px 22px 24px;
-  background: #fff;
+  background: var(--control);
   border-radius: 8px;
   box-shadow: 0 12px 45px #20261b1a;
 }
@@ -456,7 +456,7 @@ button svg {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: #eff0ed;
+  background: var(--control);
   padding: 4px;
   border-radius: 6px;
 }
@@ -468,8 +468,8 @@ button svg {
   font-size: 11px;
 }
 .face-picker button[aria-pressed="true"] {
-  background: white;
-  color: var(--ink);
+  background: var(--accent);
+  color: var(--paper);
   box-shadow: 0 2px 5px #21251c08;
 }
 .finish-control {
@@ -591,8 +591,8 @@ input[type="range"]::-moz-range-thumb {
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--ink);
-  color: white;
+  background: var(--control);
+  color: var(--ink);
   padding: 13px 23px;
   border-radius: 6px;
   font-size: 12px;
@@ -608,10 +608,10 @@ dialog {
   padding: 40px;
   box-shadow: 0 20px 90px #20261b29;
   color: var(--ink);
-  background: #fff;
+  background: var(--control);
 }
 dialog::backdrop {
-  background: #30342d33;
+  background: rgb(0 0 0 / 72%);
 }
 .modal-close {
   position: absolute;
@@ -784,7 +784,7 @@ dialog dd {
     width: calc(100% - 48px);
     margin: 28px auto 0;
     box-shadow: none;
-    background: #f1f2ee;
+    background: var(--control);
   }
 }
 @media (max-width: 365px) {

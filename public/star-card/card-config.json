@@ -25,7 +25,7 @@
   },
   "appearance": {
     "finish": "pearl",
-    "background": "#fafafa"
+    "background": "#0d0f10"
   },
   "assets": {
     "subject": "./assets/subject.png",
