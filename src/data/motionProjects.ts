@@ -29,19 +29,3 @@ export const monicaEverettProject: MotionProject = {
   videoTitle: 'Monica Everett cinematic anime edit',
   duration: 20.06,
 }
-
-export const spellBoundaryProject: MotionProject = {
-  id: 'spell-boundary',
-  title: '术式边界',
-  subtitle: 'Turn-based squad RPG',
-  kicker: 'Game design / Godot 4 / 2026',
-  brief: 'An original Chinese-language squad RPG built around speed-based turns, shared skill points, elemental weaknesses, and toughness breaks.',
-  craft: 'Designed eight operators, a playable three-character squad, battle UI, procedural combat effects, and full-screen ultimate cinematics.',
-  disciplines: ['Godot 4', 'GDScript', 'Game Design', 'Combat UI'],
-  year: '2026',
-  video: '/videos/spell-boundary-trailer.mp4',
-  poster: '/images/spell-boundary-battle.png',
-  posterAlt: 'Turn-based battle scene from 术式边界 with three operators facing rock enemies',
-  videoTitle: '术式边界 Baijin ultimate preview',
-  duration: 5.09,
-}
