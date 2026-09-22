@@ -71,17 +71,14 @@ describe('portfolio shell', () => {
     expect(lines.map((line) => line.textContent)).toEqual(['Software with a', 'point of view.'])
   })
 
-  it('keeps the homepage focused on three selected projects', () => {
+  it('keeps the homepage focused on selected projects', () => {
     render(<App />)
-    for (const title of ['Bikes R Us', 'AI Support', '术式边界']) {
+    for (const title of ['Bikes R Us', 'AI Support']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
     expect(screen.queryByRole('heading', { name: 'Job Board' })).not.toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Monica Everett' })).not.toBeInTheDocument()
-    expect(screen.getByTitle('术式边界 Baijin ultimate preview')).toHaveAttribute(
-      'src',
-      '/videos/spell-boundary-trailer.mp4',
-    )
+    expect(screen.queryByRole('heading', { name: '术式边界' })).not.toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: 'View GitHub profile' })).toHaveLength(1)
     expect(screen.getByRole('link', { name: 'View case study' })).toHaveAttribute('href', '/projects/ai-support-assistant')
     expect(screen.getByRole('link', { name: 'View all works' })).toHaveAttribute('href', '/works')
@@ -95,8 +92,8 @@ describe('portfolio shell', () => {
     window.history.replaceState({}, '', '/works')
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Built across product, AI, games, and motion.' })).toBeInTheDocument()
-    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '术式边界', 'Monica Everett']) {
+    expect(screen.getByRole('heading', { name: 'Built across product, AI, and motion.' })).toBeInTheDocument()
+    for (const title of ['Bikes R Us', 'Job Board', 'AI Support', '星澜', 'Monica Everett']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
     }
     expect(screen.getByRole('link', { name: 'View Monica Everett' })).toHaveAttribute(
@@ -105,8 +102,10 @@ describe('portfolio shell', () => {
     )
     expect(screen.getByRole('link', { name: 'Works' })).toHaveAttribute('aria-current', 'page')
 
-    await user.click(screen.getByRole('button', { name: 'Game' }))
-    expect(screen.getByRole('heading', { name: '术式边界' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: '术式边界' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Game' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Motion' }))
+    expect(screen.getByRole('heading', { name: '星澜' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Bikes R Us' })).not.toBeInTheDocument()
   })
 

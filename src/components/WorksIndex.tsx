@@ -15,7 +15,7 @@ export function WorksIndex() {
       <section className="works-hero" aria-labelledby="works-title">
         <div className="works-hero-copy">
           <p>Selected and ongoing work</p>
-          <h1 id="works-title">Built across product, AI, games, and motion.</h1>
+          <h1 id="works-title">Built across product, AI, and motion.</h1>
         </div>
         <div className="works-hero-note">
           <span>{workItems.length.toString().padStart(2, '0')} projects</span>

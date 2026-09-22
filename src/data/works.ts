@@ -1,4 +1,4 @@
-import { monicaEverettProject, spellBoundaryProject } from './motionProjects'
+import { monicaEverettProject } from './motionProjects'
 import { projects } from './portfolio'
 
 export type WorkCategory = 'Product' | 'AI' | 'Game' | 'Motion'
@@ -47,18 +47,6 @@ export const workItems: WorkItem[] = [
     tools: aiSupport.stack,
   },
   {
-    id: spellBoundaryProject.id,
-    title: spellBoundaryProject.title,
-    subtitle: spellBoundaryProject.subtitle,
-    year: spellBoundaryProject.year,
-    category: 'Game',
-    image: spellBoundaryProject.poster,
-    imageAlt: spellBoundaryProject.posterAlt,
-    href: '/#spell-boundary',
-    summary: 'An original turn-based squad RPG with elemental breaks and cinematic ultimate attacks.',
-    tools: spellBoundaryProject.disciplines,
-  },
-  {
     id: bikes.slug,
     title: bikes.title,
     subtitle: bikes.subtitle,
@@ -99,5 +87,5 @@ export const workItems: WorkItem[] = [
   },
 ]
 
-export const workCategories = ['All', 'Product', 'AI', 'Game', 'Motion'] as const
+export const workCategories = ['All', 'Product', 'AI', 'Motion'] as const
 export type WorkFilter = (typeof workCategories)[number]

@@ -6,13 +6,11 @@ import { ContactScene } from './components/ContactScene'
 import { ExperienceTimeline } from './components/ExperienceTimeline'
 import { HeroScene } from './components/HeroScene'
 import { ProjectChapter } from './components/ProjectChapter'
-import { MotionProjectChapter } from './components/MotionProjectChapter'
 import { SiteNav } from './components/SiteNav'
 import { AiSupportCaseStudy } from './components/AiSupportCaseStudy'
 import { CommandPalette } from './components/CommandPalette'
 import { WorksIndex } from './components/WorksIndex'
 import { sceneMedia, type SceneKey } from './data/media'
-import { spellBoundaryProject } from './data/motionProjects'
 import { projects } from './data/portfolio'
 
 const projectMedia: Partial<Record<string, SceneKey>> = {
@@ -66,10 +64,9 @@ function App() {
                 index={index}
               />
             ))}
-            <MotionProjectChapter project={spellBoundaryProject} />
           </div>
           <div className="work-index-cta">
-            <p>Products, experiments, games, and motion work live in one growing archive.</p>
+            <p>Products, experiments, and motion work live in one growing archive.</p>
             <a className="button button-primary" href="/works">View all works</a>
           </div>
           <AiSupportDemo />
