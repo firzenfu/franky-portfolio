@@ -10,6 +10,7 @@ import { SiteNav } from './components/SiteNav'
 import { AiSupportCaseStudy } from './components/AiSupportCaseStudy'
 import { CommandPalette } from './components/CommandPalette'
 import { WorksIndex } from './components/WorksIndex'
+import { ToolsPage } from './components/ToolsPage'
 import { sceneMedia, type SceneKey } from './data/media'
 import { projects } from './data/portfolio'
 
@@ -28,12 +29,13 @@ function App() {
     )
   }
 
-  if (window.location.pathname === '/works') {
+  const path = window.location.pathname.replace(/\/$/, '')
+  if (path === '/works' || path === '/tools') {
     return (
       <>
         <SiteNav />
         <BackgroundMusic />
-        <WorksIndex />
+        {path === '/tools' ? <ToolsPage /> : <WorksIndex />}
         <CommandPalette />
       </>
     )

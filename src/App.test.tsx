@@ -49,6 +49,7 @@ describe('portfolio shell', () => {
 
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about')
     expect(screen.getByRole('link', { name: 'Works' })).toHaveAttribute('href', '/works')
+    expect(screen.getByRole('link', { name: 'Tools' })).toHaveAttribute('href', '/tools')
     expect(screen.getByRole('link', { name: 'Skills' })).toHaveAttribute('href', '#skills')
     expect(screen.getByRole('link', { name: "Let's talk" })).toHaveAttribute('href', '#contact')
 
@@ -120,6 +121,23 @@ describe('portfolio shell', () => {
       'https://ai-support-assistant-demo.vercel.app',
     )
     expect(screen.getByRole('heading', { name: 'Follow one request.' })).toBeInTheDocument()
+  })
+
+  it('keeps utilities on a separate tools route with clear private access', () => {
+    window.history.replaceState({}, '', '/tools/')
+    const { unmount } = render(<App />)
+    expect(screen.getByRole('heading', { name: 'GPU Ticker' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Tools' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Works' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('link', { name: /Open private preview/ })).toHaveAttribute(
+      'href', 'https://gpu-ticker-kakei.tiny-mint-7638.chatgpt.site',
+    )
+    expect(screen.getByText(/Currently available only to the owner/)).toBeInTheDocument()
+    unmount()
+    window.history.replaceState({}, '', '/works')
+    render(<App />)
+    expect(screen.queryByRole('heading', { name: 'GPU Ticker' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Tools' })).not.toBeInTheDocument()
   })
 
   it('renders personal facts, capabilities, and experience', () => {

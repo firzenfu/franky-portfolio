@@ -11,7 +11,8 @@ export function SiteNav() {
         <a className="site-brand" href={homeHref('#top')}>Home</a>
         <nav className="site-nav-links" aria-label="Main navigation">
           <a href={homeHref('#about')}>About</a>
-          <a href="/works" aria-current={isHome ? undefined : 'page'}>Works</a>
+          <a href="/works" aria-current={window.location.pathname.replace(/\/$/, '') === '/works' ? 'page' : undefined}>Works</a>
+          <a href="/tools" aria-current={window.location.pathname.replace(/\/$/, '') === '/tools' ? 'page' : undefined}>Tools</a>
           <a href={homeHref('#skills')}>Skills</a>
         </nav>
         <a className="nav-cta" href={homeHref('#contact')}>Let's talk</a>

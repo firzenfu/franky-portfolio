@@ -17,6 +17,7 @@ function commands(): Command[] {
     { label: 'Home', description: 'Return to the opening scene', href: homeHref('#top'), group: 'Navigate' },
     { label: 'About', description: 'Read the short introduction', href: homeHref('#about'), group: 'Navigate' },
     { label: 'Works', description: 'Browse the complete project archive', href: '/works', group: 'Navigate' },
+    { label: 'Tools', description: 'Explore useful utilities, including GPU Ticker', href: '/tools', group: 'Navigate' },
     { label: 'Skills', description: 'Explore capabilities and tools', href: homeHref('#skills'), group: 'Navigate' },
     { label: 'AI Support case study', description: 'Open the full product story', href: '/projects/ai-support-assistant', group: 'Projects' },
     { label: 'Monica Everett film', description: 'Watch the cinematic motion edit', href: homeHref('#monica-everett'), group: 'Projects' },
