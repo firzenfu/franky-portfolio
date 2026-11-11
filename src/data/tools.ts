@@ -8,6 +8,6 @@ export const tools = [
     href: 'https://gpu-ticker-kakei.tiny-mint-7638.chatgpt.site',
     features: ['Store comparisons', 'Watchlists & target prices', 'Price history', 'CSV export'],
     dataNote: 'Canada / CAD price samples update daily at 8 AM Edmonton time. Failed sources retain prior prices; demo trends are labelled in the tool.',
-    accessNote: 'Private preview. Currently available only to the owner through ChatGPT sign-in.',
+    accessNote: 'Public read-only access. Cloud price updates and management are restricted to the owner; personal watchlists stay in your browser.',
   },
 ]
